@@ -50,8 +50,11 @@ npm install
 & (Join-Path $Hermes 'node_modules\.bin\agent-browser.cmd') install
 Pop-Location
 
-Step "7/7 Sync overlay (config + persona) into HERMES_HOME"
+Step "7/8 Sync overlay (config + persona) into HERMES_HOME"
 & (Join-Path $PSScriptRoot 'sync-overlay.ps1')
+
+Step "8/8 Re-brand the web dashboard to RealDeal CPA (+ rebuild)"
+& (Join-Path $PSScriptRoot 'brand-web.ps1')
 
 Write-Host "`nDone. Next:" -ForegroundColor Green
 Write-Host "  1. Put an LLM key in home\.env  (OPENROUTER_API_KEY or ANTHROPIC_API_KEY)"
