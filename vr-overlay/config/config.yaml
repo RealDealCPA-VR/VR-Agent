@@ -36,15 +36,50 @@ terminal:
 # Agent-authored skills still write to %HERMES_HOME%\skills.
 # ---------------------------------------------------------------------------
 skills:
-  creation_nudge_interval: 15
+  creation_nudge_interval: 8          # review/save skills more often (was 15) — learn faster
   external_dirs:
     - "C:/Users/VR/Projects/VRAGENT/vr-overlay/skills"
 
 # ---------------------------------------------------------------------------
-# Toolsets — CLI gets everything (incl. browser + web). Slack mirrors it.
+# Memory — cross-session learning. Agent curates MEMORY.md (its notes) and
+# USER.md (about Valentino) under home/memories. Seeded from vr-overlay/memory.
+# ---------------------------------------------------------------------------
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  nudge_interval: 6                   # remind to save memories every 6 turns (was 10)
+  flush_min_turns: 3                  # save before context is lost sooner (was 6)
+  # provider: honcho                  # optional AI-native user modeling (needs honcho-ai + key)
+
+# ---------------------------------------------------------------------------
+# Curator — background skill-library maintenance + consolidation into umbrellas.
+# ---------------------------------------------------------------------------
+curator:
+  enabled: true
+  interval_hours: 72
+  min_idle_hours: 1
+  stale_after_days: 30
+  archive_after_days: 90
+  consolidate: true                   # LLM pass to merge overlapping skills into umbrellas
+
+# ---------------------------------------------------------------------------
+# Delegation — parallel subagents for big multi-part jobs (research, audits,
+# batch bookkeeping). Cost scales with concurrency; kept sane + safe-by-default.
+# ---------------------------------------------------------------------------
+delegation:
+  max_concurrent_children: 6
+  max_spawn_depth: 2                  # allow orchestrator -> worker fan-out
+  subagent_auto_approve: false        # never auto-approve dangerous cmds in children
+
+# ---------------------------------------------------------------------------
+# Toolsets — CLI gets the full power set (browser, code exec, delegation,
+# session recall, vision/video, mixture-of-agents). Slack mirrors hermes-slack.
+# A tool is only USED when relevant, so breadth here costs nothing idle.
 # ---------------------------------------------------------------------------
 platform_toolsets:
-  cli: [hermes-cli]
+  cli: [hermes-cli, browser, code_execution, delegation, session_search, video, video_gen, moa]
   slack: [hermes-slack]
 
 # ---------------------------------------------------------------------------
@@ -74,6 +109,12 @@ mcp_servers:
     args: ["/c", "C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/launchers/karboncopy.cmd"]
     timeout: 180
 
+  # Bookkeeping ledger — VR-Ledger plain-text double-entry engine (in-process).
+  vr-ledger:
+    command: "C:/Users/VR/Projects/VRAGENT/hermes-agent/.venv/Scripts/python.exe"
+    args: ["C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/vr-ledger/server.py"]
+    timeout: 120
+
   # --- Staged (enable once prerequisites are met) -------------------------
   # Tax — Lacerte (LacertMCP, .NET). Needs the dotnet SDK working + a built
   # server exe/dll. Add a launchers/lacerte.cmd that runs it, then uncomment:
@@ -92,8 +133,12 @@ mcp_servers:
   # like tax-rag (http) or via a small stdio adapter.
 
 # ---------------------------------------------------------------------------
-# Display
+# Display / branding — VR-Ai crimson & black.
 # ---------------------------------------------------------------------------
 display:
   compact: false
   tool_progress: all
+  skin: vragent              # CLI/TUI skin (vr-overlay/skins/vragent.yaml)
+
+dashboard:
+  theme: vragent             # web dashboard theme (vr-overlay/dashboard-themes/vragent.yaml)

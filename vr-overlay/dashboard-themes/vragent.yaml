@@ -1,0 +1,21 @@
+name: vragent
+label: "VRAGENT Crimson"
+description: "Crimson & black premium theme — VR-Ai brand."
+
+palette:
+  background: { hex: "#0A0A0A", alpha: 1 }      # near-black canvas
+  midground:  { hex: "#DC143C", alpha: 1 }      # crimson accent
+  foreground: { hex: "#FFFFFF", alpha: 0 }
+  warmGlow: "rgba(220, 20, 60, 0.30)"           # crimson glow
+  noiseOpacity: 0.6
+
+typography:
+  fontSans: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+  fontMono: 'ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace'
+  baseSize: "15px"
+  lineHeight: "1.55"
+  letterSpacing: "0"
+
+layout:
+  radius: "0.5rem"
+  density: "comfortable"

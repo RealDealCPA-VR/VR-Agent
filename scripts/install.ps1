@@ -22,16 +22,27 @@ if (-not (Test-Path (Join-Path $Hermes '.git'))) {
 Step "2/7 Create Python 3.11 venv"
 if (-not (Test-Path $Venv)) { uv venv --python 3.11 --directory $Hermes } else { Write-Host "venv exists" }
 
-Step "3/7 Install Hermes (curated extras)"
-uv pip install --directory $Hermes -e ".[cli,web,mcp,messaging,slack,cron,anthropic,vision]"
+Step "3/7 Install Hermes (extras + capability packs)"
+uv pip install --directory $Hermes -e ".[cli,web,mcp,messaging,slack,cron,anthropic,vision,fal,exa,firecrawl,google,youtube,edge-tts]"
 
-Step "4/7 Install RPA engine for desktop control (ai-rpa-system[gui])"
+Step "4/7 Install local engines: desktop-control (RPA) + VR-Ledger"
 uv pip install --directory $Hermes -e "C:/Users/VR/Projects/RPA[gui]"
+uv pip install --directory $Hermes -e "C:/Users/VR/Projects/VR-Ledger"
 
-Step "5/7 Seed Hermes' built-in skills into HERMES_HOME"
+Step "5/7 Seed built-in + finance/research skills into HERMES_HOME"
 $homeSkills = Join-Path $Root 'home\skills'
 New-Item -ItemType Directory -Force -Path $homeSkills | Out-Null
 Copy-Item (Join-Path $Hermes 'skills\*') $homeSkills -Recurse -Force
+# High-value optional skills for an accounting/consulting power user
+$opt = Join-Path $Hermes 'optional-skills'
+foreach ($s in @('finance\3-statement-model','finance\dcf-model','finance\comps-analysis','finance\lbo-model','finance\merger-model','finance\excel-author','finance\pptx-author','finance\stocks','research\duckduckgo-search','research\domain-intel')) {
+    $src = Join-Path $opt $s
+    if (Test-Path $src) {
+        $dst = Join-Path $homeSkills (Split-Path $s -Parent)
+        New-Item -ItemType Directory -Force -Path $dst | Out-Null
+        Copy-Item $src $dst -Recurse -Force
+    }
+}
 
 Step "6/7 Install agent-browser (web browsing) + Chromium"
 Push-Location $Hermes

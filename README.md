@@ -53,7 +53,17 @@ scripts/
   - `desktop` — 14 Windows GUI tools (screenshot/click/type/hotkey/scroll/launch/run_workflow).
   - `quickbooks` — 150 tools (currently **simulation mode**; safe mock books).
   - `karboncopy` — 33 practice-management tools (uses its own `.env.local` + SQLite).
+  - `vr-ledger` — 7 plain-text double-entry tools (validate, balances, balance sheet, income statement, cash flow).
 - **Web:** `web_search` + full `browser_*` toolset (local Chromium via agent-browser).
+- **Capability packs:** image-gen (fal), premium web intel (exa, firecrawl), Google Workspace
+  (Gmail/Calendar/Drive/Sheets), YouTube transcripts, TTS (edge-tts); finance skills
+  (3-statement, DCF, comps, LBO, merger, Excel/PPTX authoring). CLI toolset includes
+  browser, code execution, parallel **delegation** (subagents), session recall, and mixture-of-agents.
+- **Self-improvement:** faster skill/memory nudges, background **curator** (consolidates
+  learned skills), seeded `USER.md`/`MEMORY.md` so it starts knowing you. Promote learned
+  skills into the tracked overlay with `.\scripts\promote-skills.ps1`.
+- **Branding:** crimson/black VR-Ai theme — CLI skin `vragent` + dashboard theme `vragent`
+  (config-only, no upstream fork). Tweak in `vr-overlay/skins/` and `vr-overlay/dashboard-themes/`.
 
 ## To finish wiring (needs your input / prereqs)
 | Item | What it needs |

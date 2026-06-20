@@ -1,0 +1,45 @@
+name: vragent
+description: "VRAGENT — crimson & black premium (VR-Ai brand)"
+
+colors:
+  banner_border: "#2A0A0E"      # near-black, crimson-tinted
+  banner_title: "#DC143C"       # crimson
+  banner_accent: "#FF2D55"      # bright crimson (section headers)
+  banner_dim: "#7A1020"         # dark red (separators, labels)
+  banner_text: "#F5F5F5"        # near-white body text
+  ui_accent: "#DC143C"
+  ui_label: "#FF2D55"
+  ui_ok: "#22c55e"
+  ui_error: "#ef4444"
+  ui_warn: "#f59e0b"
+  prompt: "#F5F5F5"
+  input_rule: "#2A0A0E"
+  response_border: "#DC143C"
+  status_bar_bg: "#0A0A0A"
+  status_bar_text: "#F5F5F5"
+  status_bar_strong: "#DC143C"
+  status_bar_dim: "#6A6A6A"
+  status_bar_good: "#22c55e"
+  status_bar_warn: "#FF2D55"
+  status_bar_bad: "#ff5252"
+  session_label: "#DC143C"
+  session_border: "#3A3A3A"
+
+branding:
+  agent_name: "VRAGENT"
+  welcome: "VRAGENT online — accounting · tax · marketing · consulting. Type a task or /help."
+  goodbye: "VRAGENT out. ◆"
+  response_label: " ◆ VRAGENT "
+  prompt_symbol: "◆"
+  help_header: "◆ VRAGENT Commands"
+
+banner_logo: |
+  [bold #DC143C]██╗   ██╗██████╗  █████╗  ██████╗ ███████╗███╗   ██╗████████╗[/]
+  [bold #C01030]██║   ██║██╔══██╗██╔══██╗██╔════╝ ██╔════╝████╗  ██║╚══██╔══╝[/]
+  [#E1213F]██║   ██║██████╔╝███████║██║  ███╗█████╗  ██╔██╗ ██║   ██║[/]
+  [#FF2D55]╚██╗ ██╔╝██╔══██╗██╔══██║██║   ██║██╔══╝  ██║╚██╗██║   ██║[/]
+  [#FF2D55] ╚████╔╝ ██║  ██║██║  ██║╚██████╔╝███████╗██║ ╚████║   ██║[/]
+  [dim #7A1020]  ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝[/]
+  [dim #7A1020]        the VR-Ai chief-of-staff — books, tax, brand, build[/]
+
+tool_prefix: "┊"
