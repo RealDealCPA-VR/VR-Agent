@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Tax, Research, IRC, Regulations, Memo, Lacerte, Citations, Compliance, Planning]
-    related_skills: [accounting, consulting, practice-mgmt]
+    related_skills: [accounting, consulting, practice-management]
 ---
 
 # Tax Research

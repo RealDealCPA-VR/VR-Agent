@@ -46,14 +46,16 @@ scripts/
 ## What's wired and working
 - **Brain:** multi-provider (OpenRouter gateway by default; Anthropic/Nous/OpenAI/etc.
   switchable with `hermes model`). Default model `anthropic/claude-opus-4.6`.
-- **Persona:** `vr-overlay/SOUL.md` (hot-reloaded every message).
-- **Skills:** 8 domain skills + ~60 Hermes built-ins, all enabled. Domain skills live in
-  `vr-overlay/skills` (read live via `skills.external_dirs`).
-- **MCP tools (validated):**
+- **Persona:** `vr-overlay/SOUL.md` (hot-reloaded every message) encoding the employee
+  operating model (onboarding, client context, authority tiers, workpapers, exceptions queue).
+- **Skills:** ~35 RealDeal CPA skills (15 SOP runbooks + firm/quality/employee-stack skills +
+  finance models) + ~60 Hermes built-ins — **97 enabled**. Live from `vr-overlay/skills`.
+- **MCP tools** (validated on this machine; on a fresh deploy each needs its **sibling project +
+  key** present — see SETUP-NEW-MACHINE.md):
   - `desktop` — 14 Windows GUI tools (screenshot/click/type/hotkey/scroll/launch/run_workflow).
-  - `quickbooks` — 150 tools (currently **simulation mode**; safe mock books).
-  - `karboncopy` — 33 practice-management tools (uses its own `.env.local` + SQLite).
-  - `vr-ledger` — 7 plain-text double-entry tools (validate, balances, balance sheet, income statement, cash flow).
+  - `quickbooks` — ~150 tools (defaults to **safe simulation**; live needs QB Desktop + the QB MCP repo).
+  - `karboncopy` — 33 practice-management tools (needs the KarbonCopy repo + its `.env.local`).
+  - `vr-ledger` — 7 plain-text double-entry tools (needs the VR-Ledger repo).
 - **Web:** `web_search` + full `browser_*` toolset (local Chromium via agent-browser).
 - **Capability packs:** image-gen (fal), premium web intel (exa, firecrawl), Google Workspace
   (Gmail/Calendar/Drive/Sheets), YouTube transcripts, TTS (edge-tts); finance skills

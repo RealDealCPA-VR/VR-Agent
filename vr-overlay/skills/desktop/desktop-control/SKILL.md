@@ -8,7 +8,7 @@ platforms: [windows]
 metadata:
   hermes:
     tags: [Desktop, Windows, GUI, Automation, RPA, Screenshot, Mouse, Keyboard, computer-use]
-    related_skills: [bookkeeping, practice-mgmt]
+    related_skills: [bookkeeping, practice-management]
 ---
 
 # Desktop Control (Windows)

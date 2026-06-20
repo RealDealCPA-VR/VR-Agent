@@ -1,7 +1,8 @@
 # =============================================================================
-# VRAGENT — Hermes config (source of truth)
-# Copied to %HERMES_HOME%\config.yaml by scripts\sync-overlay.ps1.
-# Secrets live in home\.env (never here).
+# RealDeal CPA — Hermes config TEMPLATE (source of truth).
+# scripts\sync-overlay.ps1 renders this to %HERMES_HOME%\config.yaml, replacing
+#   __VRAGENT_ROOT__  -> this project's absolute path (forward slashes)
+# so it is portable across machines/usernames. Secrets live in home\.env.
 # =============================================================================
 
 # ---------------------------------------------------------------------------
@@ -38,11 +39,11 @@ terminal:
 skills:
   creation_nudge_interval: 8          # review/save skills more often (was 15) — learn faster
   external_dirs:
-    - "C:/Users/VR/Projects/VRAGENT/vr-overlay/skills"
+    - "__VRAGENT_ROOT__/vr-overlay/skills"
 
 # ---------------------------------------------------------------------------
 # Memory — cross-session learning. Agent curates MEMORY.md (its notes) and
-# USER.md (about Valentino) under home/memories. Seeded from vr-overlay/memory.
+# USER.md (about the firm) under home/memories. Seeded from vr-overlay/memory.
 # ---------------------------------------------------------------------------
 memory:
   memory_enabled: true
@@ -83,54 +84,47 @@ platform_toolsets:
   slack: [hermes-slack]
 
 # ---------------------------------------------------------------------------
-# MCP servers — external tools exposed to the agent.
-#   desktop   : Windows GUI control (this repo's net-new server) — ACTIVE.
-#   quickbooks / karboncopy / lacerte / tax-rag / vr-ledger are staged in
-#   vr-overlay/config/mcp_servers.staged.yaml and merged in once each target
-#   is built and its secret is in home/.env (Phase 3).
+# MCP servers — external tools exposed to the agent. Launchers for external
+# projects are rendered to home/launchers/ by sync-overlay.ps1 (they need a
+# machine-specific PROJECTS_ROOT). Internal servers use the repo venv.
 # ---------------------------------------------------------------------------
 mcp_servers:
   # Windows GUI control (this repo's net-new server).
   desktop:
-    command: "C:/Users/VR/Projects/VRAGENT/hermes-agent/.venv/Scripts/python.exe"
-    args: ["C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/desktop-control/server.py"]
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/desktop-control/server.py"]
     timeout: 120
 
   # Bookkeeping — QuickBooks Desktop. Defaults to SAFE simulation mode.
-  # Switch to live books by editing vr-overlay/mcp/launchers/quickbooks.cmd.
+  # Switch to live books by editing vr-overlay/mcp/launchers/quickbooks.cmd.tmpl.
   quickbooks:
     command: "cmd"
-    args: ["/c", "C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/launchers/quickbooks.cmd"]
+    args: ["/c", "__VRAGENT_ROOT__/home/launchers/quickbooks.cmd"]
     timeout: 180
 
   # Practice management — KarbonCopy (uses its own .env.local + SQLite db).
   karboncopy:
     command: "cmd"
-    args: ["/c", "C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/launchers/karboncopy.cmd"]
+    args: ["/c", "__VRAGENT_ROOT__/home/launchers/karboncopy.cmd"]
     timeout: 180
 
   # Bookkeeping ledger — VR-Ledger plain-text double-entry engine (in-process).
   vr-ledger:
-    command: "C:/Users/VR/Projects/VRAGENT/hermes-agent/.venv/Scripts/python.exe"
-    args: ["C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/vr-ledger/server.py"]
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-ledger/server.py"]
     timeout: 120
 
   # --- Staged (enable once prerequisites are met) -------------------------
-  # Tax — Lacerte (LacertMCP, .NET). Needs the dotnet SDK working + a built
-  # server exe/dll. Add a launchers/lacerte.cmd that runs it, then uncomment:
+  # Tax — Lacerte (LacertMCP, .NET). Needs the dotnet SDK + a built server.
+  # Add launchers/lacerte.cmd.tmpl, then uncomment:
   # lacerte:
   #   command: "cmd"
-  #   args: ["/c", "C:/Users/VR/Projects/VRAGENT/vr-overlay/mcp/launchers/lacerte.cmd"]
+  #   args: ["/c", "__VRAGENT_ROOT__/home/launchers/lacerte.cmd"]
   #   timeout: 180
   #
-  # Tax research KB — tax-rag-app (FastAPI, not MCP-native). Either expose its
-  # API as an http MCP, or run its backend and reach it via the browser/web
-  # tools. Wire once an adapter or endpoint exists:
+  # Tax research KB — tax-rag-app (FastAPI). Expose its API as an http MCP, then:
   # tax-rag:
   #   url: "http://127.0.0.1:8000/mcp"
-  #
-  # Bookkeeping ledger — vr-ledger (FastAPI). Locate the project, then wire
-  # like tax-rag (http) or via a small stdio adapter.
 
 # ---------------------------------------------------------------------------
 # Display / branding — RealDeal CPA: black / white / green (Apple-clean).

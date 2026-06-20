@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Bookkeeping, Categorization, Cleanup, AP, AR, Recurring, QuickBooks, Catch-Up]
-    related_skills: [accounting, practice-mgmt, tax-research]
+    related_skills: [accounting, practice-management, tax-research]
 ---
 
 # Bookkeeping

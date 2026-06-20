@@ -1,0 +1,8 @@
+@echo off
+REM RealDeal CPA launcher for the KarbonCopy MCP server (practice management).
+REM Rendered to home/launchers/karboncopy.cmd by sync-overlay.ps1 (__PROJECTS_ROOT__
+REM replaced with the parent folder of this project at deploy time).
+REM Runs from the project dir so DATABASE_URL=file:./data/... and .env.local
+REM (KARBONCOPY_API_KEY, APP_ENCRYPTION_KEY) resolve correctly.
+cd /d "__PROJECTS_ROOT__\KarbonCopy"
+node_modules\.bin\tsx --tsconfig tsconfig.server.json src\mcp\server.ts %*

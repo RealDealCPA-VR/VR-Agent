@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
 $Hermes = Join-Path $Root 'hermes-agent'
 $Venv = Join-Path $Hermes '.venv'
+$Projects = (Split-Path -Parent $Root).Replace('\','/')   # sibling projects (RPA, VR-Ledger, ...)
 $Pin = '2ab09a6c50836d8cc407e4957c828161d0bbd81b'   # see HERMES_PIN.txt
 
 function Step($m) { Write-Host "`n=== $m ===" -ForegroundColor Cyan }
@@ -26,8 +27,12 @@ Step "3/7 Install Hermes (extras + capability packs)"
 uv pip install --directory $Hermes -e ".[cli,web,mcp,messaging,slack,cron,anthropic,vision,fal,exa,firecrawl,google,youtube,edge-tts]"
 
 Step "4/7 Install local engines: desktop-control (RPA) + VR-Ledger"
-uv pip install --directory $Hermes -e "C:/Users/VR/Projects/RPA[gui]"
-uv pip install --directory $Hermes -e "C:/Users/VR/Projects/VR-Ledger"
+# Sibling projects, resolved relative to this project's parent folder.
+# Warn-and-skip (don't abort) if a sibling is absent — its MCP just won't load.
+if (Test-Path "$Projects/RPA") { uv pip install --directory $Hermes -e "$Projects/RPA[gui]" }
+else { Write-Warning "RPA project not found at $Projects/RPA — desktop-control MCP will be unavailable until it's present." }
+if (Test-Path "$Projects/VR-Ledger") { uv pip install --directory $Hermes -e "$Projects/VR-Ledger" }
+else { Write-Warning "VR-Ledger project not found at $Projects/VR-Ledger — vr-ledger MCP will be unavailable until it's present." }
 
 Step "5/7 Seed built-in + finance/research skills into HERMES_HOME"
 $homeSkills = Join-Path $Root 'home\skills'

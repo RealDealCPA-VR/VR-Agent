@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Accounting, GAAP, Journal-Entry, Reconciliation, Month-End, QuickBooks, Ledger, Financial-Statements]
-    related_skills: [bookkeeping, tax-research, practice-mgmt]
+    related_skills: [bookkeeping, tax-research, practice-management]
 ---
 
 # Accounting
