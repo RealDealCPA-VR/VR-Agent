@@ -1,0 +1,47 @@
+name: realdealcpa
+label: "RealDeal CPA"
+description: "Modern black / white / green — clean, legible, Apple-style light UI."
+
+# In this design system: background = canvas/surfaces, midground = primary TEXT
+# + ink. White canvas + near-black ink = high legibility. Green is pinned as the
+# accent via colorOverrides so buttons/links/focus read green, text stays black.
+palette:
+  background: { hex: "#FFFFFF", alpha: 1 }     # white canvas (Apple light)
+  midground:  { hex: "#1D1D1F", alpha: 1 }     # near-black ink — primary text
+  foreground: { hex: "#1D1D1F", alpha: 0 }     # highlight layer (kept subtle)
+  warmGlow: "rgba(48, 209, 88, 0.08)"          # faint green vignette
+  noiseOpacity: 0.0                            # clean, no grain
+
+typography:
+  fontSans: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, sans-serif'
+  fontDisplay: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif'
+  fontMono: 'ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace'
+  baseSize: "15px"
+  lineHeight: "1.5"
+  letterSpacing: "-0.01em"                      # Apple-style tight tracking
+
+layout:
+  radius: "0.75rem"                             # soft rounded corners
+  density: "comfortable"
+
+# Green accent + Apple-system semantic colors, on a black-on-white base.
+colorOverrides:
+  primary: "#30D158"             # Apple green — buttons, primary actions
+  primaryForeground: "#FFFFFF"   # white text on green
+  ring: "#30D158"                # green focus ring
+  success: "#30D158"
+  accent: "#EAF9EF"             # pale-green hover surface
+  accentForeground: "#0B5A2B"   # deep green text on pale-green
+  secondary: "#F5F5F7"          # Apple light-gray surface
+  secondaryForeground: "#1D1D1F"
+  muted: "#F5F5F7"
+  mutedForeground: "#6E6E73"    # Apple secondary gray
+  card: "#FFFFFF"
+  cardForeground: "#1D1D1F"
+  popover: "#FFFFFF"
+  popoverForeground: "#1D1D1F"
+  border: "#E5E5EA"             # Apple hairline separators
+  input: "#E5E5EA"
+  destructive: "#FF3B30"        # Apple red (destructive only)
+  destructiveForeground: "#FFFFFF"
+  warning: "#FF9F0A"            # Apple amber

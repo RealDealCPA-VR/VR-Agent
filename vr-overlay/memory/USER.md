@@ -6,4 +6,4 @@ Always confirm before mutating real systems — posting to the books, filing, se
 §
 Domains he wants elite help with: accounting, bookkeeping, tax research/prep, consulting/advisory, marketing, practice management, email. He also wants full creative range on demand.
 §
-Brand: VR-Ai is crimson (#DC143C) + black, clean premium modern. Use that voice/palette for anything client- or public-facing.
+Brand: RealDeal CPA is black / white / green (Apple green ~#30D158), clean Apple-style minimalism — lots of whitespace, legible, premium. Use that palette/feel for anything client- or public-facing.

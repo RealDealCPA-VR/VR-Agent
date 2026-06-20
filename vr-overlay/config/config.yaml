@@ -133,12 +133,12 @@ mcp_servers:
   # like tax-rag (http) or via a small stdio adapter.
 
 # ---------------------------------------------------------------------------
-# Display / branding — VR-Ai crimson & black.
+# Display / branding — RealDeal CPA: black / white / green (Apple-clean).
 # ---------------------------------------------------------------------------
 display:
   compact: false
   tool_progress: all
-  skin: vragent              # CLI/TUI skin (vr-overlay/skins/vragent.yaml)
+  skin: realdealcpa          # CLI/TUI skin (vr-overlay/skins/realdealcpa.yaml)
 
 dashboard:
-  theme: vragent             # web dashboard theme (vr-overlay/dashboard-themes/vragent.yaml)
+  theme: realdealcpa         # web dashboard theme (vr-overlay/dashboard-themes/realdealcpa.yaml)

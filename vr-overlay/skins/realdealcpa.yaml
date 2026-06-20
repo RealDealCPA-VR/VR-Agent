@@ -1,0 +1,40 @@
+name: realdealcpa
+description: "RealDeal CPA — modern black / white / green, Apple-clean"
+
+colors:
+  banner_border: "#2C2C2E"      # subtle dark gray
+  banner_title: "#30D158"       # Apple green
+  banner_accent: "#34C759"      # green section headers
+  banner_dim: "#6E6E73"         # Apple secondary gray
+  banner_text: "#F5F5F7"        # near-white body text
+  ui_accent: "#30D158"
+  ui_label: "#34C759"
+  ui_ok: "#30D158"
+  ui_error: "#FF3B30"
+  ui_warn: "#FF9F0A"
+  prompt: "#F5F5F7"
+  input_rule: "#2C2C2E"
+  response_border: "#30D158"
+  status_bar_bg: "#000000"
+  status_bar_text: "#F5F5F7"
+  status_bar_strong: "#30D158"
+  status_bar_dim: "#6E6E73"
+  status_bar_good: "#30D158"
+  status_bar_warn: "#FF9F0A"
+  status_bar_bad: "#FF3B30"
+  session_label: "#30D158"
+  session_border: "#2C2C2E"
+
+branding:
+  agent_name: "RealDeal CPA"
+  welcome: "RealDeal CPA — your AI chief of staff. Accounting · tax · advisory · marketing. Type a task or /help."
+  goodbye: "RealDeal CPA — signing off. ●"
+  response_label: " ● RealDeal CPA "
+  prompt_symbol: "❯"
+  help_header: "● RealDeal CPA — Commands"
+
+banner_logo: |
+  [bold #30D158]▰▰▰[/]  [bold #F5F5F7]RealDeal CPA[/]  [bold #30D158]▰▰▰[/]
+  [dim #6E6E73]AI chief of staff · accounting · tax · advisory · brand[/]
+
+tool_prefix: "│"

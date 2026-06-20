@@ -62,8 +62,9 @@ scripts/
 - **Self-improvement:** faster skill/memory nudges, background **curator** (consolidates
   learned skills), seeded `USER.md`/`MEMORY.md` so it starts knowing you. Promote learned
   skills into the tracked overlay with `.\scripts\promote-skills.ps1`.
-- **Branding:** crimson/black VR-Ai theme — CLI skin `vragent` + dashboard theme `vragent`
-  (config-only, no upstream fork). Tweak in `vr-overlay/skins/` and `vr-overlay/dashboard-themes/`.
+- **Branding:** RealDeal CPA — modern black / white / green, Apple-clean. CLI skin
+  `realdealcpa` + dashboard theme `realdealcpa` (config-only, no upstream fork). Tweak in
+  `vr-overlay/skins/` and `vr-overlay/dashboard-themes/`.
 
 ## To finish wiring (needs your input / prereqs)
 | Item | What it needs |
