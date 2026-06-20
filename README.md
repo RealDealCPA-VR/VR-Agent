@@ -1,87 +1,279 @@
-# VRAGENT
+<div align="center">
 
-A personal, ultra-capable agent for Valentino — a **customized overlay on
-[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)**, tuned for
-**accounting, bookkeeping, tax research, marketing, consulting, practice management, and
-email**, with full creative range — and the ability to **control the Windows desktop and
-browse the web from the terminal**.
+# RealDeal CPA
 
-Upstream Hermes stays untouched and updatable; everything that makes it *yours* lives in
-`vr-overlay/`, and all runtime state lives in a repo-local `HERMES_HOME` (`home/`).
+### The AI accounting **employee** — not another tool you babysit.
 
-## Layout
-```
-hermes-agent/            upstream clone (pinned in HERMES_PIN.txt), editable-installed
-home/                    HERMES_HOME — config.yaml, SOUL.md, skills/, sessions, memory (runtime)
-vr-overlay/              tracked source of truth for all customization
-  SOUL.md                the persona (CPA-grade advisor + creative range)
-  config/config.yaml     model (multi-provider), toolsets, mcp_servers
-  config/env.example     secrets template
-  skills/                8 domain skills (accounting, tax, marketing, ...)
-  mcp/desktop-control/   net-new Windows GUI-control MCP server (wraps your RPA project)
-  mcp/launchers/         .cmd shims that run the QuickBooks/KarbonCopy MCPs from their dirs
-scripts/
-  install.ps1            reproducible one-shot setup
-  sync-overlay.ps1       copy config.yaml + SOUL.md into home/ after editing
-  vragent.ps1            launcher (sets HERMES_HOME=./home, runs `hermes …`)
-```
+**It arrives like a 15-year hire.** It learns your firm, follows your SOPs, leaves workpapers, self-checks, escalates what's material, and gets better every time you review it.
 
-## Setup
+**It runs QuickBooks. It runs Windows. It runs the browser. From the terminal.**
+
+`Black · White · Green` &nbsp;•&nbsp; `Windows` &nbsp;•&nbsp; `102 skills` &nbsp;•&nbsp; `16 SOP runbooks` &nbsp;•&nbsp; `4 MCP servers · 204 tools` &nbsp;•&nbsp; `CLI · TUI · Dashboard · Slack`
+
+[Install](#install) · [Quickstart](#quickstart) · [Commands](#command-reference) · [Skill Catalog](#the-skill-catalog) · [Safety Model](#the-authority-model--trustworthy-by-design) · [Architecture](#architecture) · [FAQ](#troubleshooting--faq)
+
+</div>
+
+---
+
+## The résumé
+
+| | |
+|---|---|
+| **Role** | Staff accountant / CPA — bookkeeping, tax prep, advisory, practice ops |
+| **Experience** | 15+ years of firm practice, encoded as 16 professional SOP runbooks |
+| **Knows how a firm runs** | Yes — and onboards to learn *yours* on day one |
+| **Operates** | QuickBooks Desktop · the Windows desktop (any app) · the web browser |
+| **Leaves a paper trail** | A reviewable workpaper for every task |
+| **Default posture** | Prepares everything; stops at money & filings for your sign-off |
+| **Gets better** | Learns from your corrections; consolidates skills between sessions |
+
+You're not installing software. You're staffing a seat.
+
+---
+
+## Why this is different
+
+Most "AI for accounting" is a chatbot bolted onto a feature. RealDeal CPA is an **employee**: it onboards, holds context per client, works to a standard, and knows when to stop and ask. It's built as a customized, hardened overlay on the open-source [`NousResearch/hermes-agent`](https://github.com/NousResearch/hermes-agent) engine.
+
+| | A tool / chatbot | **RealDeal CPA** |
+|---|---|---|
+| **Onboarding** | None — starts cold every time | First-day interview; learns *your* firm + clients |
+| **Method** | Ad-hoc answers | 16 professional **SOP runbooks** it actually follows |
+| **Evidence** | A chat log | A reviewable **workpaper** for every task |
+| **Judgment** | Guesses on ambiguity | Routes material/ambiguous items to an **exceptions queue** |
+| **Authority** | Acts freely, or not at all | Tiered **Green / Yellow / Red** gates — it prepares filings, *you* submit |
+| **Reach** | API calls | Controls **QuickBooks Desktop, the Windows desktop, and the browser** |
+| **Memory** | Forgets | Persistent `USER.md` / `MEMORY.md` + per-client profiles |
+
+---
+
+## What it does
+
+- **Accounting & bookkeeping** — categorize, reconcile, close.
+- **Tax** — research and prep; **sales-tax** nexus, prep & filing; **payroll-tax** prep (Forms 941/940, EFTPS).
+- **Advisory & consulting** — client-facing analysis and recommendations.
+- **Marketing & brand** — assets and campaigns for your firm or your clients.
+- **Practice management** — email triage, comms cadence, proactive routines.
+- **It operates the machine** — **QuickBooks Desktop**, the **Windows desktop (any app)**, and a **headless browser** — all from the terminal.
+
+---
+
+## Capabilities at a glance
+
+| Surface | What's wired | Count |
+|---|---|---|
+| **Skills** | Enabled skills loaded on the agent | **102** |
+| **SOP runbooks** | Professional, step-by-step procedures | **16** |
+| **MCP tool servers** | desktop · quickbooks · karboncopy · vr-ledger | **4** |
+| **Tools across servers** | 14 + 150 + 33 + 7 | **204** |
+| **Web** | `web_search` + full headless-Chromium automation | navigate / click / type / screenshot / run JS |
+| **Interfaces** | CLI · TUI · branded web dashboard · Slack | **4** |
+
+### The 4 MCP tool servers
+
+| Server | Tools | What it controls |
+|---|---|---|
+| **desktop** | 14 | Windows GUI automation — drive any desktop app |
+| **quickbooks** | 150 | QuickBooks Desktop. **Safe SIMULATION by default**; live mode talks to QB Desktop |
+| **karboncopy** | 33 | Practice management |
+| **vr-ledger** | 7 | Plain-text double-entry ledger |
+
+### Capability packs
+
+- **Image generation** (fal) · **Premium web research** (exa / firecrawl)
+- **Google Workspace** — Gmail, Calendar, Drive, Sheets · **YouTube transcripts** · **TTS**
+- **Finance models** — 3-statement, DCF, plus **Excel & PowerPoint authoring**
+
+### Self-improving by design
+
+- **Persistent memory** — `USER.md` / `MEMORY.md` + per-client profiles.
+- **Skill-creation loop** — it builds new skills as it learns your work.
+- **Background curator** — consolidates what it learns between sessions.
+- **Parallel subagents** — delegates work to run concurrently.
+- **Multi-provider brain** — OpenRouter / Anthropic / others, switchable on the fly.
+
+---
+
+## Install
+
+> **Prereqs (on PATH):** Windows · git · uv · Node 20 · npm · pnpm. **QuickBooks Desktop** for live books (the MCP also runs in safe simulation without it). Paths are templated and portable across machines — see [`SETUP-NEW-MACHINE.md`](SETUP-NEW-MACHINE.md).
+
 ```powershell
+git clone https://github.com/RealDealCPA-VR/VR-Agent.git VRAGENT
+cd VRAGENT
 .\scripts\install.ps1
-# then add an LLM key to home\.env:  OPENROUTER_API_KEY=...  (or ANTHROPIC_API_KEY=...)
-.\scripts\vragent.ps1 doctor
 ```
 
-## Run (interfaces)
+`install.ps1` clones the engine, installs it, seeds the skills, and **builds + brands the dashboard**.
+
+### Add an LLM key (required)
+
+Edit `home\.env`:
+
+```env
+OPENROUTER_API_KEY=...        # one key → 200+ models (recommended), or:
+ANTHROPIC_API_KEY=...
+```
+
+### Verify
+
 ```powershell
-.\scripts\vragent.ps1                 # interactive CLI
-.\scripts\vragent.ps1 --tui           # terminal UI
-.\scripts\vragent.ps1 dashboard       # web dashboard -> http://127.0.0.1:9119
-.\scripts\vragent.ps1 model           # switch provider/model (multi-provider)
-.\scripts\vragent.ps1 mcp list        # see wired MCP servers
-.\scripts\vragent.ps1 gateway run     # messaging gateway (Slack, etc.)
+.\scripts\vragent.ps1 doctor      # expect green
+.\scripts\vragent.ps1 mcp list    # desktop / quickbooks / karboncopy / vr-ledger enabled
 ```
 
-## What's wired and working
-- **Brain:** multi-provider (OpenRouter gateway by default; Anthropic/Nous/OpenAI/etc.
-  switchable with `hermes model`). Default model `anthropic/claude-opus-4.6`.
-- **Persona:** `vr-overlay/SOUL.md` (hot-reloaded every message) encoding the employee
-  operating model (onboarding, client context, authority tiers, workpapers, exceptions queue).
-- **Skills:** ~35 RealDeal CPA skills (15 SOP runbooks + firm/quality/employee-stack skills +
-  finance models) + ~60 Hermes built-ins — **97 enabled**. Live from `vr-overlay/skills`.
-- **MCP tools** (validated on this machine; on a fresh deploy each needs its **sibling project +
-  key** present — see SETUP-NEW-MACHINE.md):
-  - `desktop` — 14 Windows GUI tools (screenshot/click/type/hotkey/scroll/launch/run_workflow).
-  - `quickbooks` — ~150 tools (defaults to **safe simulation**; live needs QB Desktop + the QB MCP repo).
-  - `karboncopy` — 33 practice-management tools (needs the KarbonCopy repo + its `.env.local`).
-  - `vr-ledger` — 7 plain-text double-entry tools (needs the VR-Ledger repo).
-- **Web:** `web_search` + full `browser_*` toolset (local Chromium via agent-browser).
-- **Capability packs:** image-gen (fal), premium web intel (exa, firecrawl), Google Workspace
-  (Gmail/Calendar/Drive/Sheets), YouTube transcripts, TTS (edge-tts); finance skills
-  (3-statement, DCF, comps, LBO, merger, Excel/PPTX authoring). CLI toolset includes
-  browser, code execution, parallel **delegation** (subagents), session recall, and mixture-of-agents.
-- **Self-improvement:** faster skill/memory nudges, background **curator** (consolidates
-  learned skills), seeded `USER.md`/`MEMORY.md` so it starts knowing you. Promote learned
-  skills into the tracked overlay with `.\scripts\promote-skills.ps1`.
-- **Branding:** RealDeal CPA — modern black / white / green, Apple-clean. CLI skin
-  `realdealcpa` + dashboard theme `realdealcpa` (config-only, no upstream fork). Tweak in
-  `vr-overlay/skins/` and `vr-overlay/dashboard-themes/`.
+---
 
-## To finish wiring (needs your input / prereqs)
-| Item | What it needs |
-|------|----------------|
-| **LLM key** | `OPENROUTER_API_KEY` or `ANTHROPIC_API_KEY` in `home\.env` (required to run). |
-| **QuickBooks live** | Edit `vr-overlay/mcp/launchers/quickbooks.cmd`: set `QB_LIVE=1` + `QB_COMPANY_FILE`, open QB Desktop. |
-| **Lacerte (tax)** | Fix the `dotnet` SDK, build LacertMCP, add `launchers/lacerte.cmd`, uncomment `lacerte:` in config. |
-| **tax-rag / vr-ledger** | Expose each FastAPI app as an http MCP (or adapter); uncomment in config. |
-| **Slack** | Create a Slack app (Socket Mode), put `SLACK_BOT_TOKEN`+`SLACK_APP_TOKEN` in `.env`, `vragent.ps1 gateway run`. |
-| **Email** | Configure the Email gateway / a Gmail MCP for valentinohelp@gmail.com. |
-| **Pixio** | `PIXIO_API_KEY` in `.env` for the marketing/creative media skills. |
+## Quickstart
 
-## Editing
-- Change behavior/persona/models → edit files in `vr-overlay/`, then `.\scripts\sync-overlay.ps1`.
-- Add a skill → drop `vr-overlay/skills/<category>/<name>/SKILL.md` (no sync needed).
-- Add an MCP → add an entry under `mcp_servers:` in `vr-overlay/config/config.yaml`, sync, `vragent.ps1 mcp test <name>`.
+```powershell
+# 1) Start the agent (CLI)
+.\scripts\vragent.ps1
 
-Updating upstream: `git -C hermes-agent pull` then re-run `install.ps1` (your overlay is untouched).
+# 2) First day on the job — let it learn your firm + clients
+#    run the firm-onboarding flow before any production work
+
+# 3) Open the branded web dashboard
+.\scripts\vragent.ps1 dashboard   # -> http://127.0.0.1:9119
+```
+
+> **First day:** run **`firm-onboarding`** before production work. It comes with 15 years of expertise but no knowledge of *your* firm until onboarded. Then load/seed client profiles with **`client-context`**.
+
+---
+
+## Command reference
+
+> All commands run from the repo root. The launcher pins state (config, persona, skills, sessions, memory) inside the project via an in-repo `HERMES_HOME`.
+
+| Command | What it does |
+|---|---|
+| `.\scripts\install.ps1` | Clone the engine, install, seed skills, build + brand the dashboard |
+| `.\scripts\vragent.ps1` | Run the agent (interactive **CLI**) |
+| `.\scripts\vragent.ps1 --tui` | Run the **terminal UI** |
+| `.\scripts\vragent.ps1 doctor` | Health check |
+| `.\scripts\vragent.ps1 dashboard` | Start the **web dashboard** → http://127.0.0.1:9119 |
+| `.\scripts\vragent.ps1 model` | Switch provider / model |
+| `.\scripts\vragent.ps1 mcp list` | List wired MCP tool servers |
+| `.\scripts\vragent.ps1 gateway run` | Start the **Slack** (messaging) gateway |
+| `.\scripts\sync-overlay.ps1` | Re-render config/persona/launchers into `home\` after edits |
+
+### Configure (optional integrations)
+
+| Setting | Where | Keys / steps |
+|---|---|---|
+| **Slack** | `home\.env` | `SLACK_BOT_TOKEN`, `SLACK_APP_TOKEN` |
+| **Pixio** (media) | `home\.env` | `PIXIO_API_KEY` |
+| **KarbonCopy** | its own `.env.local` | `KARBONCOPY_API_KEY`, `APP_ENCRYPTION_KEY`, `DATABASE_URL` |
+| **QuickBooks live** | `vr-overlay\mcp\launchers\quickbooks.cmd.tmpl` | set `QB_LIVE=1` + `QB_COMPANY_FILE=...`, re-run `sync-overlay.ps1`, open QB Desktop with that file (first connection prompts a one-time QB authorization) |
+
+---
+
+## The skill catalog
+
+**102 enabled skills.** The professional core is 16 SOP runbooks the agent actually follows:
+
+| Bookkeeping & close | Tax | Specialized & systems |
+|---|---|---|
+| month-end-close | sales-tax-prep-filing | fixed-assets-depreciation |
+| bank-reconciliation | sales-tax-nexus-determination | debt-loan-amortization |
+| transaction-categorization | payroll-tax-prep-filing (941/940, EFTPS) | inventory-cogs-cycle |
+| accounts-payable | year-end-close-1099 | deferred-revenue-recognition (ASC 606) |
+| accounts-receivable | | new-client-onboarding |
+| financial-statement-prep | | quickbooks-operating-guide |
+
+### Firm / employee skills
+
+| Skill | Role |
+|---|---|
+| `firm-onboarding` | First-day interview — learns your firm |
+| `client-context` | Loads a client's profile before any work |
+| `authority-and-escalation` | Trust tiers (Green / Yellow / Red) |
+| `workpaper-standard` | Every task leaves a reviewable workpaper |
+| `self-review-qc` | Self-checks its own output before handoff |
+| `communication-cadence` | Keeps a professional comms rhythm |
+| `proactive-routines` | Runs recurring work on its own |
+
+Plus the wider library of **102** skills — image generation, web research, Google Workspace, finance modeling, document authoring, and more.
+
+---
+
+## The authority model — trustworthy by design
+
+The gates aren't a caveat. They're the feature. **A good firm doesn't let a first-week hire wire money. Neither does this.** Every task is classified, and **every task leaves a reviewable workpaper**. Ambiguous or material items go to an **exceptions queue** — never guessed.
+
+| Tier | Behavior | Examples |
+|:---:|---|---|
+| 🟢 **GREEN** | **Does it autonomously** | Read, categorize, reconcile, draft, prepare, analyze, write workpapers |
+| 🟡 **YELLOW** | **Does it + tells you** | Routine, immaterial standard entries |
+| 🔴 **RED** | **Prepares — you authorize** | Posting material/unusual journal entries · sending client emails · moving money · **submitting any tax or payroll filing** |
+
+> On **RED**, the agent pre-fills the portal and assembles the workpaper. A human reviews and clicks **submit**. Keep these gates on in production.
+
+---
+
+## Architecture
+
+```
+VRAGENT/                         your overlay repo (path-portable)
+├─ scripts/
+│  ├─ install.ps1                clone engine · install · seed skills · build+brand dashboard
+│  ├─ sync-overlay.ps1           render config/persona/launchers into home/
+│  └─ vragent.ps1                launcher (pins an in-repo HERMES_HOME)
+├─ home/                         state: config, persona, skills, sessions, memory, .env  (gitignored)
+├─ hermes-agent/                 the open-source engine (NousResearch/hermes-agent)
+└─ vr-overlay/                   persona · skills · config templates · MCP launchers (path-templated)
+
+MCP servers (sibling projects under the same parent folder):
+  Quickbooks MCP Desktop/   ·   KarbonCopy/   ·   RPA/ (desktop control)   ·   VR-Ledger/
+```
+
+- **Path-portable.** `install.ps1` and `sync-overlay.ps1` resolve every path at deploy time (`__VRAGENT_ROOT__`, `__PROJECTS_ROOT__`). The `C:\Users\…` paths don't need to match.
+- **Self-contained state.** The launcher sets `HERMES_HOME` to the repo's `home\`, so config, persona, skills, sessions, and memory all live inside the project.
+- **Sibling MCPs.** Place the four integration projects under the **same parent folder** as `VRAGENT`. If one is absent, that MCP simply won't start — comment it out of `vr-overlay/config/config.yaml.tmpl` and re-run `sync-overlay.ps1`.
+- **Upstream stays updatable.** Your customization lives in `vr-overlay/`; the engine in `hermes-agent/` can be updated independently.
+
+---
+
+## Troubleshooting & FAQ
+
+**`Hermes is not installed yet. Run: .\scripts\install.ps1`**
+The venv/binary isn't built. Run `.\scripts\install.ps1` from the repo root.
+
+**`doctor` isn't green.**
+Confirm prereqs are on PATH (git · uv · Node 20 · npm · pnpm) and that `home\.env` has a valid `OPENROUTER_API_KEY` or `ANTHROPIC_API_KEY`.
+
+**An MCP server is missing from `mcp list`.**
+The matching sibling project isn't present under the parent folder. Add it, or comment it out of `vr-overlay/config/config.yaml.tmpl` and re-run `sync-overlay.ps1`.
+
+**Will it touch my real books?**
+No — the QuickBooks MCP runs in **safe simulation by default**. Live mode requires you to set `QB_LIVE=1` + `QB_COMPANY_FILE`, re-sync, open QB Desktop, and approve a one-time authorization.
+
+**Will it file my taxes or move money without me?**
+No. Those are **RED** actions: it prepares and pre-fills, then a human reviews and submits.
+
+**Can I move it to another machine?**
+Yes — paths are templated. See [`SETUP-NEW-MACHINE.md`](SETUP-NEW-MACHINE.md).
+
+**The honest line.** The only two things it can't do out of the box: **(1)** run without an LLM key, and **(2)** act on real systems without that one-time connection and your sign-off on filings and money. By design.
+
+---
+
+<div align="center">
+
+## Hire it today
+
+It already has 15 years of experience. Give it one onboarding interview and it learns *your* firm.
+
+```powershell
+git clone https://github.com/RealDealCPA-VR/VR-Agent.git VRAGENT
+cd VRAGENT
+.\scripts\install.ps1
+.\scripts\vragent.ps1            # then run firm-onboarding
+```
+
+**Onboard it this afternoon. Put it on the books by Monday.**
+
+*The employee that reads, reconciles, prepares, and leaves the workpaper — you review and sign.*
+
+</div>
