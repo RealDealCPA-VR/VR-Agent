@@ -54,8 +54,8 @@ runs in Hermes' single configured timezone (set it once in Hermes config, not pe
 `--deliver email:partner@firm.com` to pin a specific address.
 
 ```bash
-# 1) DAILY AM STANDUP — Mon-Fri 07:00
-hermes cron add "0 7 * * 1-5" \
+# 1) DAILY AM STANDUP — Mon-Fri ~07:07 (off-round on purpose; see Timing)
+hermes cron add "7 7 * * 1-5" \
   "Read-only morning standup. (1) Triage the inbox into Now/Reply/Delegate/FYI; \
 draft replies for the partner to review — DO NOT SEND. (2) Pull KarbonCopy deadlines+work; \
 list everything due today/overdue and any at-risk (blocked, no time logged, slipping). \
@@ -64,8 +64,8 @@ top fires, drafted replies ready, and an EXCEPTIONS QUEUE. No mutations, no send
   --name daily-standup --deliver email \
   --skill email-management --skill client-context --skill practice-management
 
-# 2) WEEKLY DIGEST — Monday 07:30
-hermes cron add "30 7 * * 1" \
+# 2) WEEKLY DIGEST — Monday ~07:32
+hermes cron add "32 7 * * 1" \
   "Read-only weekly digest, per active client. (1) the QB report tools AR Aging + AP Aging: \
 flag >60/>90 day buckets, top overdue customers, bills coming due. (2) Cash position from \
 Balance Sheet / vr-ledger cash_flow_statement; note runway concerns. (3) KarbonCopy \
@@ -75,10 +75,10 @@ and an EXCEPTIONS QUEUE. No JEs, no payments, no sends." \
   --name weekly-digest --deliver email \
   --skill accounting --skill practice-management --skill client-context
 
-# 3) MONTHLY CLOSE KICKOFF — 1st of month 07:00
+# 3) MONTHLY CLOSE KICKOFF — 1st of month ~07:08
 #    Digest goes to the partner via email; KarbonCopy tasks are CREATED inside the run
 #    by the KarbonCopy MCP (per the prompt), NOT via --deliver.
-hermes cron add "0 7 1 * *" \
+hermes cron add "8 7 1 * *" \
   "Open the prior-month close for each active client. Build the close checklist: \
 bank/CC recons, accruals, prepaids amortization, depreciation, payroll clearing, \
 intercompany, suspense cleanup. Pull last-month P&L and B/S; flag anomalies vs prior period \
@@ -121,6 +121,20 @@ toolset loads and the delivery lands in the partner's inbox. Manage the cadence 
 `hermes cron list`, `hermes cron pause <job_id>`, `hermes cron resume <job_id>`,
 `hermes cron run <job_id>` (one-off test), and `hermes cron remove <job_id>` — all take the
 job_id from `cron list`.
+
+## Timing & availability (be a person, not a clock)
+- **Off-round on purpose.** The schedules fire at 07:07 / 07:32 / 07:08, not on the dot — a real
+  person doesn't deliver at a robotic :00. Keep them slightly irregular.
+- **Respect working hours.** Read the firm's hours + your "shift" from `USER.md` (set during
+  `firm-onboarding`). Non-urgent drafts and routine output that finish off-hours **queue to land
+  in the next working window** rather than pinging at 2am. Genuinely time-critical items (a
+  same-day deadline, a bounced payment, a failed filing) still go out immediately, any hour.
+- **Ad-hoc flags are allowed.** Routines aren't the only time you reach out. If you incidentally
+  notice something relevant while doing other work — a vendor double-charged, a balance that
+  drifted, a deadline that crept up — send a short `FLAG:` line (per `communication-cadence`)
+  without waiting for a scheduled run. That unprompted "hey, noticed this" is what a real hire does.
+- Stay in your lane on send-gates: ad-hoc or scheduled, client-facing and money/filing actions
+  are still RED (draft + sign-off).
 
 ## Edge cases a 15-year CPA knows cold
 - **Due-date drift is real** — 4/15, 6/15, 9/15, 1/15, 4/30, 1/31 all shift for weekends and

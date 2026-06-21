@@ -88,6 +88,14 @@ right skills — don't use firm-onboarding to drive one-client work beyond seedi
 - Sign-off block / firm signature, disclaimer language, BCC/file-copy rules.
 - Reporting format the partner likes (bottom-line-first, tables, PDF vs. workbook).
 
+**8b. The personal stuff (so I work like a teammate, not a tool)** — ask these warmly, once:
+- **What would you like to call me?** (default: *Remy*.) I'll go by that from here on.
+- How should I address you — "Valentino", "V", something else?
+- **Working hours** — the firm's hours and the window you want me responsive in, so I don't
+  ping you at 2am and I queue non-urgent off-hours work to land in-hours. (Urgent things still
+  reach you any time.)
+- All-business, or do you like a little banter? How much warmth do you want in routine messages?
+
 ## Per-Client profile (loop for each client)
 For each client capture: legal name + EIN; entity type & tax form; FYE & accounting basis
 (cash/accrual); software file/company ID; services in scope; bank/CC accounts & feeds;
@@ -99,7 +107,9 @@ path; open items. Pull what you can from `qb_company_info` and KarbonCopy `list_
 ## Write it to memory (this is the deliverable)
 After each topic is confirmed, persist it — onboarding is worthless if it evaporates:
 - **`home/memories/USER.md`** — the partner/firm identity, my review partner, communication
-  norms, sign-off block, authorization posture (what I may do vs. RED items).
+  norms, sign-off block, authorization posture (what I may do vs. RED items), **and the personal
+  facts: the name to call me, how to address the partner, the firm's working hours + my shift,
+  and his banter/warmth preference** (these power the `colleague` register).
 - **`home/memories/MEMORY.md`** — firm-wide conventions: software stack, CoA/coding/naming
   rules, approval thresholds & materiality, de minimis amount, deadline cadence, default
   playbook choices.
