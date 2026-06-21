@@ -31,7 +31,7 @@ foreach ($base in @($Bundled, (Join-Path $Root 'vr-overlay\skills'))) {
 $promoted = 0
 Get-ChildItem $HomeSkills -Recurse -Filter SKILL.md -ErrorAction SilentlyContinue | ForEach-Object {
     $skillDir = $_.Directory
-    if ($known.ContainsKey($skillDir.Name)) { return }   # bundled/seeded — skip
+    if ($known.ContainsKey($skillDir.Name)) { return }   # bundled/seeded - skip
     $dst = Join-Path $OverlayDst $skillDir.Name
     Write-Host "PROMOTE: $($skillDir.Name)  ($($skillDir.FullName))"
     if (-not $WhatIf) {

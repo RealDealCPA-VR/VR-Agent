@@ -81,7 +81,7 @@ block a filing or close deadline with a leading `‼`. Sort by deadline, then by
 
 Don't wait to be asked. Fire a short flag the moment you see:
 - A **deadline** inside its window — payroll 941/940, 1099-NEC (Jan 31), W-2, estimates,
-  state DOR/EFTPS dates. Pull due dates from **KarbonCopy** (`deadlines`, `list_work`, `tasks`)
+  state DOR/EFTPS dates. Pull due dates from **KarbonCopy** (`list_deadlines`, `list_work`, `list_tasks`)
   and verify statutory dates current-year via `web_search` if rates/dates are in play.
 - An **anomaly** — a balance, ratio, or trend that breaks pattern vs prior period; a recon
   variance you can't clear; a duplicate/round-dollar/backdated entry.

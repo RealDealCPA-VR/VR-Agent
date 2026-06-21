@@ -110,8 +110,20 @@ the first page is the whole list. `qb_item_list` requires `itemType` to paginate
   entries and workpapers, and dry-run any mutation.
 - **RED — prepare, then REQUIRE human sign-off before the real write:** posting material/unusual
   journal entries (`qb_journal_*`), creating/paying bills or cutting payments (`qb_bill_pay`),
-  voiding/deleting, write-offs (`qb_invoice_write_off`), and anything that submits a filing. The
-  agent dry-runs and stages the call; a human authorizes the commit.
+  any tool that **moves money** — customer payments, deposits, checks, transfers, sales-tax
+  payments (`qb_payment_receive`, `qb_payment_apply`, `qb_deposit_create`, `qb_check_create`,
+  `qb_transfer_create`, `qb_sales_tax_payment_create`), voiding/deleting, write-offs
+  (`qb_invoice_write_off`), credit memos applied to a balance (`qb_credit_memo_apply`), and
+  anything that **submits a tax/payroll filing or sends a client-facing document**. These RED
+  items always require explicit human sign-off — they are **never** covered by a blanket
+  pre-authorization. The agent dry-runs and stages the call; a human authorizes the commit.
+- **Customer-facing AR creates** — issuing an invoice, sales receipt, statement charge, or
+  credit memo (`qb_invoice_create`, `qb_sales_receipt_create`, `qb_statement_charge_create`,
+  `qb_credit_memo_create`): each books AR/revenue and goes out to a client, so each needs an
+  explicit confirmation. Routine, immaterial, individually-confirmed billing (≤ the engagement's
+  materiality threshold — default **$1,000** per document absent a firm-specific figure) may be
+  pre-authorized for a defined client/run; anything material, unusual, or batched
+  (`qb_invoice_batch_create`, `qb_sales_receipt_batch_create`) is RED and requires sign-off.
 
 ## Required output
 1. **Bottom line first** — e.g. "LIVE/Acme — TB ties; one $42.10 variance in Undeposited Funds."

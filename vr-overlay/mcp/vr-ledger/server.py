@@ -47,8 +47,13 @@ def _call_report(fn, ledger, at: Optional[str], start: Optional[str], end: Optio
     kwargs = {}
     if "at" in params and at:
         kwargs["at"] = _parse_date(at)
-    if "start" in params and start:
-        kwargs["start"] = _parse_date(start)
+    if start:
+        sv = _parse_date(start)
+        # income_statement / cash_flow_statement use 'begin'; others may use 'start'
+        if "begin" in params:
+            kwargs["begin"] = sv
+        elif "start" in params:
+            kwargs["start"] = sv
     if "end" in params and end:
         kwargs["end"] = _parse_date(end)
     return fn(ledger, **kwargs)
@@ -103,7 +108,7 @@ def cash_flow_statement(path: str, start: Optional[str] = None, end: Optional[st
 @mcp.tool()
 def accounts(path: str) -> str:
     """List all account names declared/used in the ledger."""
-    return _json(_load(path).accounts())
+    return _json(_resolve(_load(path).accounts))
 
 
 @mcp.tool()

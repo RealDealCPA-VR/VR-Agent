@@ -16,7 +16,7 @@ $RootFwd  = $Root.Replace('\','/')                       # config uses forward s
 $Projects = Split-Path -Parent $Root                     # siblings (QuickBooks MCP, KarbonCopy, ...)
 
 # Read/write as UTF-8 explicitly. PS 5.1 Get-Content -Raw defaults to ANSI and
-# would mangle non-ASCII (em dashes, ·, →); .NET ReadAllText auto-detects UTF-8.
+# would mangle non-ASCII (em dashes, -, ->); .NET ReadAllText auto-detects UTF-8.
 $NoBom = New-Object System.Text.UTF8Encoding($false)
 function ReadText($path)  { [System.IO.File]::ReadAllText($path) }
 function WriteText($path, $text) { [System.IO.File]::WriteAllText($path, $text, $NoBom) }

@@ -33,7 +33,7 @@ right skills — don't use firm-onboarding to drive one-client work beyond seedi
 - Echo back what you heard before writing it. **Never guess a firm convention** — if the
   partner is unsure or it's material, park it in the EXCEPTIONS QUEUE, don't invent a default.
 - Capture verbatim where wording matters (engagement scope, sign-off language).
-- Where you can verify yourself, do — `list_clients`/`list_work`/`deadlines` (KarbonCopy),
+- Where you can verify yourself, do — `list_clients`/`list_work`/`list_deadlines` (KarbonCopy),
   `qb_company_list`/`qb_company_info` (QuickBooks) — then confirm with the partner rather than
   asking them to recite what the systems already know.
 
@@ -79,7 +79,7 @@ right skills — don't use firm-onboarding to drive one-client work beyond seedi
 **7. Deadlines & cadence**
 - Recurring client deadlines: payroll (941 quarterly, 940 annual, state), sales tax filing
   frequency, 1099-NEC/W-2 (Jan 31), income-tax due dates & extensions, month-end close day.
-- Confirm against KarbonCopy `deadlines`/`list_work`; note who files vs. who reviews.
+- Confirm against KarbonCopy `list_deadlines`/`list_work`; note who files vs. who reviews.
 - Lead time the partner wants before each deadline; preferred close calendar.
 
 **8. Communication norms**

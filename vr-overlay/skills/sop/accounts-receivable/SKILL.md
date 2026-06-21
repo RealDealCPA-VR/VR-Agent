@@ -28,10 +28,13 @@ undeposited funds and tying deposits to the bank.
   `qb_company_info` FIRST, every time — **read and state `mode` (SIM vs LIVE)**, `companyFile`,
   basis, and period before anything else (per quickbooks-operating-guide). Tools you actually
   call: `qb_customer_list`, `qb_invoice_list`, `qb_invoice_create`, `qb_estimate_*`,
-  `qb_invoice_write_off`, `qb_journal_entry_create`, and the report tools `qb_ar_aging`
-  (AR Aging Summary/Detail) and the QB report tools (Sales by Customer). **There is NO wired
-  receive-payment or make-deposit tool** — see the Payment-application and Undeposited-funds
-  playbooks for how cash receipts and deposits are actually recorded.
+  `qb_payment_receive`/`qb_payment_apply` (record + apply cash receipts at the
+  customer/invoice level), `qb_deposit_create` (clear Undeposited Funds to bank),
+  `qb_credit_memo_create`/`qb_credit_memo_apply`, `qb_invoice_write_off`,
+  `qb_journal_entry_create`, and the report tools `qb_ar_aging`
+  (AR Aging Summary/Detail) and the QB report tools (Sales by Customer). The purpose-built
+  receipt/deposit/credit-memo tools are the primary path; a manual `qb_journal_entry_create`
+  is a documented fallback only — see the Payment-application and Undeposited-funds playbooks.
   Most mutating calls accept `dryRun` — prove the entry with `dryRun:true` before the real post.
   **Caveat:** the composite flows reject `dryRun` with `9006` — notably `qb_invoice_write_off`
   and the estimate→invoice convert — so verify those on a *single item* first, never a batch.
@@ -39,7 +42,8 @@ undeposited funds and tying deposits to the bank.
   a per-create `idempotencyKey` so a timeout retry can't double-post an invoice.
 - **vr-ledger MCP** — for ledger-format books or quick AR balance/aging analysis off-line.
 - **KarbonCopy MCP** — `list_clients`/`list_contacts` to confirm the legal entity, billing
-  contact, and engagement before you bill or dun. `invoices` for practice-side billing.
+  contact, and engagement before you bill or dun. `list_invoices`/`create_invoice`/`get_invoice`
+  (and `record_payment`) for practice-side billing.
 - **browser / desktop MCP** — only when a customer portal (Bill.com, a state vendor portal) has
   no API; screenshot-verify any UI action.
 
@@ -74,26 +78,24 @@ customer is a client communication → draft, hold for review.**
 
 **Payment application** → identify the open invoices to apply against with `qb_invoice_list`
 (filter to open/unpaid for that customer) and confirm the balance via `qb_ar_aging` →
-apply cash to the specified-or-oldest invoice. **NOTE: there is no wired receive-payment tool**
-in the `qb_` MCP (the AP side cuts money with `qb_bill_pay`; AR has no documented receipt
-analog). Record the cash receipt one of two ways, and say which you used in the workpaper:
-  - **Journal entry** via `qb_journal_entry_create` — Dr Undeposited Funds (or Bank) / Cr
-    Accounts Receivable for that customer/invoice (`dryRun:true` first to prove it balances),
-    posted with a fresh `idempotencyKey`; or
-  - the **QuickBooks "Receive Payments" UI** driven through the **desktop MCP** (screenshot-verify
-    the applied invoice and remaining balance) when the customer/job-level application must show
-    natively in QB.
+apply cash to the specified-or-oldest invoice. **Primary path:** record the receipt with
+`qb_payment_receive` and apply it at the customer/invoice level with `qb_payment_apply` so the
+open balance and customer history update natively in QB (`dryRun:true` first where the tool
+allows, post with a fresh `idempotencyKey`). **Fallback only** if the purpose-built tools are
+unavailable: a manual `qb_journal_entry_create` — Dr Undeposited Funds (or Bank) / Cr Accounts
+Receivable for that customer/invoice (`dryRun:true` first to prove it balances, fresh
+`idempotencyKey`). Say which path you used in the workpaper.
 If the receipt lands in **Undeposited Funds**, that's correct staging, not a deposit; group and
 deposit to clear it (below). Apply to the **oldest open invoice unless the remittance specifies**
 otherwise; note any short-pay/over-pay as an exception. Never write off a short-pay
 penny-difference over a threshold without partner sign-off.
 
 **Undeposited funds / deposits** → pull the Undeposited Funds balance → group the day's receipts
-into a deposit that matches the actual bank deposit slip. **There is no make-deposit tool wired**,
-so clear UF → Bank by one of: a journal entry via `qb_journal_entry_create` (Dr Bank / Cr
-Undeposited Funds, `dryRun:true` first, fresh `idempotencyKey`), or the **QB "Make Deposits" UI
-via the desktop MCP** (screenshot-verify the deposit total ties to the slip). Then reconcile to
-the bank feed. A stale UF balance = receipts recorded but never deposited (or double-recorded) →
+into a deposit that matches the actual bank deposit slip. **Primary path:** clear UF → Bank with
+`qb_deposit_create`, grouping the day's receipts so the deposit total ties to the slip
+(`dryRun:true` first where allowed, fresh `idempotencyKey`). **Fallback only** if the deposit
+tool is unavailable: a journal entry via `qb_journal_entry_create` (Dr Bank / Cr Undeposited
+Funds, `dryRun:true` first, fresh `idempotencyKey`). Then reconcile to the bank feed. A stale UF balance = receipts recorded but never deposited (or double-recorded) →
 exception.
 
 **AR aging & collections cadence** → run `qb_ar_aging` (**AR Aging Summary**, and Detail for the
@@ -110,11 +112,13 @@ build the collections worklist sorted by amount × age. Cadence (calendar from d
   review before send.** Log every touch and any promise-to-pay in the workpaper.
 
 **Credit memo / refund** → confirm the reason (return, billing error, allowance/concession) and
-that it's properly authorized → book the reduction Dr Revenue (or Sales Returns & Allowances) /
-Cr AR via `qb_journal_entry_create` (`dryRun:true` first to prove it balances; fresh
-`idempotencyKey`) against that customer/invoice, or via the QB credit-memo UI through the
-**desktop MCP** when the credit must apply natively to the open invoice → apply the credit to the
-open invoice. If cash was already received and a refund is owed, **moving money is RED** — prepare
+that it's properly authorized → **primary path:** create the memo with `qb_credit_memo_create`
+(booking the reduction Dr Revenue or Sales Returns & Allowances / Cr AR against that
+customer/invoice; `dryRun:true` first where allowed, fresh `idempotencyKey`) and apply it to the
+open invoice with `qb_credit_memo_apply` so it shows natively in customer history. **Fallback
+only** if the credit-memo tools are unavailable: a manual `qb_journal_entry_create`
+(`dryRun:true` first to prove it balances; fresh `idempotencyKey`) against that customer/invoice
+→ apply the credit to the open invoice. If cash was already received and a refund is owed, **moving money is RED** — prepare
 the refund, hold for sign-off. A credit memo that nets an invoice to zero is GREEN to prepare but
 note the original invoice #.
 

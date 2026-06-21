@@ -65,7 +65,8 @@ these" / "what account does this go to" request.
    **W-9** and is this a 1099-NEC contractor or a misclassified worker? Behavioral/financial/
    relationship control (IRS common-law test) leaning employee → **exception** (W-2 +
    payroll-tax exposure). Code to Subcontractors/Contract Labor only with a W-9 on file;
-   missing W-9 ≥ $600/yr → exception (1099 filing at risk).
+   missing W-9 ≥ **$600/yr** (longstanding statutory baseline — **verify current-year
+   threshold**) → exception (1099 filing at risk).
 8. **Meals vs travel vs entertainment?** Travel (airfare, lodging, transit) → Travel.
    Business meals → **Meals** (separate account; 50% limit per IRC §274(n) — verify
    current-year %; entertainment is **nondeductible** §274(a) and must be coded separately).
@@ -82,7 +83,7 @@ these" / "what account does this go to" request.
 - **Low (<0.60)** — multiple plausible accounts, missing W-9, capitalize-vs-expense judgment,
   owner/personal ambiguity, anything **material** (set a per-client materiality $ threshold;
   default flag ≥ $2,500 or any item that moves a tax position). → **EXCEPTIONS QUEUE**.
-Always queue: reasonable-comp shortfalls, missing W-9 ≥ $600, possible misclassification,
+Always queue: reasonable-comp shortfalls, missing W-9 ≥ $600 (verify current-year threshold), possible misclassification,
 new account needed, anything that crosses personal/business, and any single item above
 materiality regardless of confidence.
 

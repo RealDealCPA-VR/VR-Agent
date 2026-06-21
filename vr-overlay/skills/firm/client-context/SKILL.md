@@ -57,7 +57,7 @@ client what the firm already decided last quarter.
    this is onboarding → create it from `templates/client-profile.md`.
 2. **Refresh live facts** before trusting the file:
    - `list_clients` / `list_contacts` (KarbonCopy) → name, contacts, engagement, scope.
-   - `deadlines` / `work` / `tasks` (KarbonCopy) → upcoming filing dates & open work.
+   - `list_deadlines` / `list_work` / `list_tasks` (KarbonCopy) → upcoming filing dates & open work.
    - `qb_session_status` then `qb_company_info` (QuickBooks) → confirm you're pointed at the
      RIGHT company file; pull EIN, FY, basis. ALWAYS run these two before any QB work.
 3. **Diff** live facts vs the stored profile. If they disagree, the live source usually
@@ -76,7 +76,7 @@ client what the firm already decided last quarter.
 - **Wrong company file open in QB** is the classic disaster — verify `qb_company_info` EIN
   against the profile EVERY time; mismatch = stop, exception, do not post.
 - **Stale deadlines** — a date in the file is a hint; reconfirm against KarbonCopy
-  `deadlines` and, for current-year due dates/rates, "verify current-year" (weekend/holiday
+  `list_deadlines` and, for current-year due dates/rates, "verify current-year" (weekend/holiday
   shifts the due date; FinCEN BOI, state nexus, and estimate safe-harbors change yearly).
 - **Entity change mid-year** (LLC → S-corp election via Form 2553) splits the year and the
   filing set — flag it, don't assume one return.

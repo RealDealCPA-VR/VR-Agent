@@ -25,7 +25,7 @@ explicit TODOs, not silent gaps.
 
 ## Tools you drive
 - **KarbonCopy MCP** — `list_clients`/`list_contacts` (dedupe before creating), `list_work`,
-  `tasks`, `time`, `invoices`, `deadlines` — the system of record for the engagement.
+  `list_tasks`, `list_time`, `list_invoices`, `list_deadlines` — the system of record for the engagement.
 - **QuickBooks Desktop MCP** (`qb_*`) — `qb_session_status` + `qb_company_info` FIRST, then
   `qb_company_list`/`qb_company_open`, `qb_account_*` (CoA), `qb_journal_entry_create` (opening
   entries — the canonical posting tool per the QuickBooks Operating Guide; always `dryRun: true`

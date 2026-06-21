@@ -38,6 +38,17 @@ fractional-CFO and management-consultant grade.
 - Tie advice back to cash and risk, not just the P&L.
 - Cross-link: tax angles → `tax-research`; the numbers → `accounting`; go-to-market → `marketing`.
 
+## Workpaper & QC
+- **Workpaper note (every model).** For each input figure, record source tool + report +
+  as-of/period date (e.g. `qb_pnl_report`, FY24 YTD, pulled 2026-06-20). List each
+  assumption with its rationale. Tie out totals back to the source ledger.
+- **Exceptions queue.** Route material, unusual, or ambiguous items — outlier variances,
+  going-concern/runway risk, any number that fails the sanity check — to a human for review
+  before relying on it. Don't silently carry a figure you couldn't verify.
+- **Self-review/QC pass.** Run the `self-review-qc` skill on every client-facing deliverable
+  (memo/deck/model) before it's finalized: re-derive key totals, confirm each figure traces
+  to its workpaper note, and check assumptions are labeled.
+
 ## Output
 Executive summary (the call + why) → supporting analysis/tables → assumptions & risks →
 next steps. Clean tables, no jargon padding.

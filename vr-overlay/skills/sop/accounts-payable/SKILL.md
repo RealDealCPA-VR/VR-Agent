@@ -60,8 +60,8 @@ Before entering OR paying, screen for dupes — the most common AP loss:
 ### 4. Approval workflow (GREEN to route; payment release is RED)
 - Route per the client's authority matrix (dollar thresholds → approver). If none on file,
   flag and use a conservative default; don't invent authority.
-- Log approvals (who/when) to the workpaper. Track routing/SLAs in KarbonCopy (`tasks`,
-  `time`, `deadlines`) so nothing ages past terms unapproved.
+- Log approvals (who/when) to the workpaper. Track routing/SLAs in KarbonCopy (`add_task`/`list_tasks`,
+  `log_time`, `create_deadline`/`list_deadlines`) so nothing ages past terms unapproved.
 - Unapproved + due → EXCEPTIONS QUEUE before the discount/due date lapses.
 
 ### 5. Payment run & early-pay discounts (PREPARE GREEN → RELEASE RED)
@@ -86,7 +86,7 @@ Before entering OR paying, screen for dupes — the most common AP loss:
 
 ### 7. W-9 collection & 1099 tracking (GREEN; filing is RED)
 - **Get a Form W-9 BEFORE first payment** — establishes name/TIN and 1099 status; without it,
-  24% **backup withholding** applies (IRC 3406).
+  **backup withholding** applies (currently 24% — verify current-year rate; IRC 3406, tied to the 4th-lowest individual rate).
 - Mark 1099-reportable vendors. **1099-NEC** for $600+ of nonemployee compensation/services
   (Box 1); **1099-MISC** for rents ($600, Box 1) and **royalties ($10, Box 2)**, among others.
   Corporations are generally exempt **except** attorneys (legal fees always reportable) and

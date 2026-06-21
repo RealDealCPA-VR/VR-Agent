@@ -1,13 +1,13 @@
 ---
 name: tax-research
-description: "Authoritative US tax research and prep support: issue-spot, find controlling authority (IRC/Regs/rulings/cases), apply to facts, and write a defensible memo. Drives the tax-rag and Lacerte (LacertMCP) tools; never asserts uncertain positions as settled."
+description: "Authoritative US tax research and prep support: issue-spot, find controlling authority (IRC/Regs/rulings/cases), apply to facts, and write a defensible memo. Researches via web_search/browser and the engagement's own files, and reads client financials through the QuickBooks (qb_*) tools; never asserts uncertain positions as settled."
 version: 1.0.0
 author: VRAGENT
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
-    tags: [Tax, Research, IRC, Regulations, Memo, Lacerte, Citations, Compliance, Planning]
+    tags: [Tax, Research, IRC, Regulations, Memo, QuickBooks, Citations, Compliance, Planning]
     related_skills: [accounting, consulting, practice-management]
 ---
 
@@ -17,12 +17,15 @@ You research and answer US federal and state tax questions to a standard you'd p
 name on, then support return prep.
 
 ## Tools
-- **`tax-rag` MCP** — semantic search over the tax knowledge base (code, regs, guidance,
-  internal memos). Your first stop for authority and prior work.
-- **`lacerte` MCP (LacertMCP)** — read/inspect Lacerte returns, fields, diagnostics, and
-  client data for prep and review.
-- **`browser` / `web_search`** — verify current-year figures, recent guidance, or a state
-  rule the KB doesn't cover. Prefer primary sources (irs.gov, state DOR, courts).
+- **`web_search` + `browser_*`** (`browser_navigate`, `browser_snapshot`, etc.) — your
+  primary research path: find and read controlling authority, verify current-year figures,
+  recent guidance, or a state rule. Prefer primary sources (irs.gov, state DOR, courts).
+- **The engagement's own files** — search prior memos, workpapers, and internal guidance
+  already on the engagement for prior work and firm positions before researching anew.
+- **QuickBooks (`qb_*`)** — read client financials when a position turns on the books:
+  e.g. `qb_pnl_report`, `qb_balance_sheet_report`, `qb_trial_balance_export`,
+  `qb_general_ledger`, `qb_transaction_list`, `qb_journal_entry_list`. Read-only for
+  research; do not post entries from this skill.
 
 ## Method (issue → authority → analysis → conclusion)
 1. **Facts first.** Pin down filing status, entity type, tax year, jurisdiction(s),
@@ -38,6 +41,19 @@ name on, then support return prep.
 ## Output: a short memo
 **Issue · Facts · Authority · Analysis · Conclusion**, bottom line up top. Cite every tax
 conclusion. Flag deadlines, penalties, and disclosure requirements (e.g. Form 8275).
+
+## Persist + escalate
+- **File the memo to the engagement workpapers** — save the completed
+  Issue/Facts/Authority/Analysis/Conclusion memo to the engagement's workpaper set, linked
+  to the return it supports, with the cite list and the date each authority was verified.
+- **Route material or unsettled positions to the exceptions queue.** A position is an
+  exception when it is **material** (could change the return's tax, refund, or balance due
+  by more than the lesser of $1,000 or ~5% of the line item — use the engagement's
+  materiality threshold if one is set), or when it rests on **low confidence**, **missing
+  controlling authority**, or **requires Form 8275/8275-R disclosure**. Such a position
+  must get a human reviewer's sign-off before it informs a filed return — never let it flow
+  to a filing on the skill's own authority. Routine, immaterial, individually-confirmed
+  conclusions need no queue.
 
 ## Hard rules
 - **Never invent a citation.** If you can't find authority, say so and say what you'd check.

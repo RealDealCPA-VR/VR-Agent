@@ -72,7 +72,12 @@ def screenshot(region: Optional[list[int]] = None) -> Image:
     Take a screenshot BEFORE acting (to find targets) and AFTER (to verify).
     """
     pg = _pyautogui()
-    shot = pg.screenshot(region=tuple(region)) if region else pg.screenshot()
+    if region is not None:
+        if len(region) != 4:
+            raise ValueError("region must be exactly [x, y, width, height]")
+        shot = pg.screenshot(region=tuple(int(v) for v in region))
+    else:
+        shot = pg.screenshot()
     return Image(data=_png_bytes(shot), format="png")
 
 
@@ -185,10 +190,19 @@ def run_workflow(steps_json: str, allow_unsafe: bool = False) -> str:
     allow_unsafe=true. Returns an LLM-friendly summary of each step's result.
     """
     from ai_rpa_system.models import Workflow, ActionStep
-    from ai_rpa_system.executor import WorkflowExecutor
 
-    raw = json.loads(steps_json)
-    steps = [ActionStep(**s) for s in raw]
+    try:
+        raw = json.loads(steps_json)
+    except json.JSONDecodeError as e:
+        return f"error: steps_json is not valid JSON ({e})"
+    if not isinstance(raw, list):
+        return "error: steps_json must be a JSON array of ActionStep objects"
+    try:
+        steps = [ActionStep(**s) for s in raw]
+    except Exception as e:
+        return f"error: invalid step ({e.__class__.__name__}: {e})"
+
+    from ai_rpa_system.executor import WorkflowExecutor
     wf = Workflow(name="vragent_adhoc", description="ad-hoc desktop workflow", steps=steps)
     ex = WorkflowExecutor()
     result = ex.execute_workflow(wf, validate=True, safe=True, allow_unsafe=allow_unsafe)

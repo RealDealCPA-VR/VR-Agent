@@ -10,7 +10,10 @@
 # models); Anthropic/Nous/OpenAI/etc. all work too. Switch live: `hermes model`.
 # ---------------------------------------------------------------------------
 model:
-  default: "anthropic/claude-opus-4.6"   # strong reasoning for tax/consulting; swap with `hermes model`
+  # Strong reasoning for tax/consulting. Pick whatever your provider exposes —
+  # switch anytime with `hermes model`. (claude-opus-4.5 is in Hermes' known list;
+  # bump to a newer Opus if your OpenRouter/Anthropic catalog has one.)
+  default: "anthropic/claude-opus-4.5"
   provider: "auto"                        # auto-detect from whichever keys are in home/.env
   base_url: "https://openrouter.ai/api/v1"
 

@@ -42,7 +42,7 @@ authorizes every deposit and every submit (PIN/attestation/penalty exposure are 
 4. **Verify current-year figures** before quoting: SS wage base, SS/Medicare rates, FUTA wage
    base & credit-reduction list, state W/H tables, SUI rate notice & state wage base. Use
    `web_search`/browser on IRS + state DOR. If unconfirmed, write "verify current-year" — never guess.
-5. **Check the calendar.** Pull this client's payroll-tax `deadlines`/`tasks` from **KarbonCopy** so
+5. **Check the calendar.** Pull this client's payroll-tax `list_deadlines`/`list_tasks` from **KarbonCopy** so
    you stage the right period and don't miss a deposit or filing due date.
 
 ## Deposit schedule (federal, Form 941 taxes)
@@ -148,4 +148,4 @@ wage bases, and credit-reduction list before any number leaves the firm.
    (which deposit, which transmittal) and that no money was moved and nothing was filed.
 6. **Filing log + next deadline (KarbonCopy)** — log the period, form (941/940/state/W-3), amount,
    due date, and status (prepared / pre-filled / submitted + confirmation # once a human files), then
-   set the **next** deposit and filing due dates via KarbonCopy `deadlines`/`tasks` so cadence is tracked.
+   set the **next** deposit and filing due dates via KarbonCopy `list_deadlines`/`list_tasks` so cadence is tracked.

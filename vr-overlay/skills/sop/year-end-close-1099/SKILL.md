@@ -32,7 +32,7 @@ aggregate information returns** → mandatory e-file (verify current-year).
 `qb_session_status` → `qb_company_info` → confirm the entity, EIN, fiscal year, and cash vs
 accrual basis. Pull the QB report tools Trial Balance for the close year and prior year for compare.
 If books are in vr-ledger, `validate` then `balances`/`income_statement`/`balance_sheet`.
-Open the KarbonCopy job: `list_work` / `deadlines` to anchor due dates and `tasks` for the checklist.
+Open the KarbonCopy job: `list_work` / `list_deadlines` to anchor due dates and `list_tasks` for the checklist.
 
 ## Procedure
 
@@ -68,7 +68,7 @@ Open the KarbonCopy job: `list_work` / `deadlines` to anchor due dates and `task
   etc.) — the exclusion is based on the payment METHOD, not on whether a 1099-K is issued.** Card
   and network payments are the processor's reporting lane (Treas. Reg. §1.6041-1(a)(1)(iv)), so the
   payer never reports them on a 1099-NEC. **OBBBA (enacted 7/4/2025) reverted the 1099-K threshold
-  back to $20,000 / 200 transactions, TY2024+ (verify current-year)** — so most card/TPSO payments
+  back to $20,000 / 200 transactions, TY2025+ (payments made in 2025 and later; verify current-year)** — so most card/TPSO payments
   will NOT actually generate a 1099-K. **Do not let the absence of a 1099-K revive a 1099-NEC duty
   on card-paid amounts:** a sub-$20k card-paid vendor still gets NO 1099-NEC from you. Exclude
   payments to corporations EXCEPT attorneys (gross proceeds box 10 / legal fees) and medical/
@@ -106,12 +106,12 @@ Open the KarbonCopy job: `list_work` / `deadlines` to anchor due dates and `task
   or vr-ledger statements; use the `3-statement-model` / `excel-author` skills for the deliverable.
 - Build the **tax-ready trial balance** for the preparer: final adjusted balances, the AJE list,
   the book-vs-tax depreciation columns, M-1 book/tax difference flags (meals 50%, depreciation,
-  accruals, penalties), and supporting workpaper index. Hand off via KarbonCopy (`invoices`/`time`/`tasks`).
+  accruals, penalties), and supporting workpaper index. Hand off via KarbonCopy (`list_invoices`/`list_time`/`log_time`/`list_tasks`).
 
 ## Pitfalls a 15-year CPA knows cold
 - Card/network payment method removes your 1099-NEC duty (it's the processor's lane, Treas. Reg.
   §1.6041-1(a)(1)(iv)) — and this holds **even if no 1099-K is issued**. Post-OBBBA the 1099-K
-  threshold is back to $20k/200 (TY2024+, verify), so a sub-$20k card-paid vendor gets neither a
+  threshold is back to $20k/200 (TY2025+, payments made in 2025 and later; verify), so a sub-$20k card-paid vendor gets neither a
   1099-K nor a 1099-NEC from you. Don't issue a 1099-NEC just because no 1099-K appeared.
 - Attorney payments are reportable even to a corporation (legal-fee / gross-proceeds rule).
 - Reimbursed expenses and goods are not NEC; don't gross them up.

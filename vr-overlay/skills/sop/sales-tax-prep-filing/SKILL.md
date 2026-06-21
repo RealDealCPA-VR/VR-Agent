@@ -33,7 +33,7 @@ taxable all differ. **Verify current-year rates and rules; never assume last per
   frequency, due dates, and prepayment rules. Cite the DOR page/date.
 - **browser tools** — `browser_navigate/snapshot/type/click/console` to log into the state DOR
   portal and pre-fill the return. **Pre-fill only — do not click final Submit/File.**
-- **KarbonCopy MCP** — `deadlines` / `tasks` to log the filing and set the next period's due date.
+- **KarbonCopy MCP** — `create_deadline` / `update_deadline` / `list_deadlines` and `add_task` / `list_tasks` to log the filing and set the next period's due date.
 
 ## Procedure
 
@@ -96,7 +96,7 @@ taxable all differ. **Verify current-year rates and rules; never assume last per
     sales-tax-payable (full collected liability) / Cr cash (amount actually paid) / Cr other income
     (the vendor/timely-filing discount taken in step 5), so the entry balances. Posting the JE is
     itself RED if material; otherwise draft it for review. Set the next period's deadline in
-    KarbonCopy (`deadlines`).
+    KarbonCopy (`create_deadline`).
 
 ## Edge cases a 15-year CPA knows cold
 - **Zero/negative liability still requires a return** in most states — file a zero return; skipping it

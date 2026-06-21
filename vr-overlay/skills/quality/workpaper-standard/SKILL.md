@@ -62,7 +62,7 @@ Use the template at `templates/workpaper.md` — copy it, don't free-form. Keep 
 ## Procedure
 1. **Identify** the client (`list_clients`/`list_contacts`) and confirm period + basis before touching numbers.
 2. **Copy** `templates/workpaper.md` to the filing path above; fill the header (elements 1-5).
-3. **Capture source docs** as you go (element 6): record each the QB report tools you ran with its date range and basis; note statement dates, document numbers, file paths, and any `desktop`/`browser` portal screenshot you took. Always `qb_session_status` + `qb_company_info` first and record which company file you were in.
+3. **Capture source docs** as you go (element 6): record each the QB report tools you ran with its date range and basis; note statement dates, document numbers, file paths, and any `desktop` `screenshot` (the screenshot tool) of a portal you took. Always `qb_session_status` + `qb_company_info` first and record which company file you were in.
 4. **Document procedures** (element 7) step-by-step with the exact tools and parameters used — a reviewer should be able to re-run them.
 5. **Tie out** (element 8): agree every material balance to its source, foot the schedules, recompute estimates. Record both sides and the difference with a tick.
 6. **Conclude** (element 9): write the bottom line; claim only what the ties support.

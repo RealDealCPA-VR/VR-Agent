@@ -31,7 +31,8 @@ Unattended = no human watching, so every cron run is **strictly read/draft/deliv
 prompt for each job MUST constrain the agent to these:
 - **Reads:** `qb_session_status`, `qb_company_info`, the QB report tools (P&L, Balance Sheet, AR/AP
   Aging, Trial Balance), `qb_account_*`/`qb_*_list` queries; KarbonCopy `list_clients`,
-  `deadlines`, `work`, `tasks`, `time`, `invoices`; vr-ledger `balances`,
+  `list_deadlines`, `list_work`, `list_tasks`, `list_time`, `list_invoices`, `list_payments`;
+  vr-ledger `balances`,
   `income_statement`, `balance_sheet`, `cash_flow_statement`; the Email gateway in
   **read-only** + **draft** mode; `client-context` LOAD.
 - **Produces:** a digest email (drafted/sent to the partner only — internal, not the client),
@@ -90,8 +91,9 @@ sign-off, EXCEPTIONS QUEUE." \
 
 # 4) QUARTERLY ESTIMATED-TAX REMINDER — ~3 weeks before each due date
 hermes cron add "0 8 25 3,5,8,12 *" \
-  "Estimated-tax (Form 1040-ES; corporate estimates computed on the 1120-W worksheet — \
-verify it's still the current vehicle) heads-up for the upcoming due date \
+  "Estimated-tax (Form 1040-ES; corporate estimates computed on the current-year corporate \
+estimated-tax worksheet (formerly Form 1120-W, discontinued after 2022 — verify the current \
+vehicle)) heads-up for the upcoming due date \
 (4/15, 6/15, 9/15, 1/15 — verify current-year; weekend/holiday shifts it). For each client \
 with estimate obligations: pull YTD income (P&L), compute a safe-harbor target \
 (prior-year 100%/110% or 90% current — verify current-year %s), and DRAFT the voucher \

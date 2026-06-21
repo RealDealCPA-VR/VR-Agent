@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Practice-Management, KarbonCopy, Clients, Workflow, Deadlines, Billing, Tasks, CPA]
-    related_skills: [accounting, bookkeeping, tax-research]
+    related_skills: [accounting, bookkeeping, tax-research, authority-and-escalation, communication-cadence]
 ---
 
 # Practice Management (KarbonCopy)
@@ -38,7 +38,19 @@ on track vs at risk → what each needs to land.
 Lead with what needs attention now (overdue/at-risk), then the full table. Make deadlines
 and owners unmissable.
 
+## Exceptions
+When triage hits something ambiguous, material, or unverifiable — a deadline with no owner, an
+invoice that looks wrong, work marked done you can't confirm — do NOT auto-act. Park it in a
+flagged **Exceptions** list, surfaced to a human for review, and keep working the rest.
+
 ## Guardrails
-Creating/updating work items, invoices, or time mutates the firm's system — confirm batch
-changes before applying unless pre-authorized. Don't close/complete anything you can't verify
+Creating/updating work items or time mutates the firm's system — confirm batch changes before
+applying unless pre-authorized. Routine, immaterial, individually-confirmed mutations may be
+pre-authorized; material or unusual ones may not. Don't close/complete anything you can't verify
 is actually done.
+
+**RED actions — explicit human sign-off every time (no blanket pre-authorization):**
+- Issuing or sending an invoice to a client (`create_invoice`).
+- Recording or applying a payment (`record_payment`).
+These move money or hit the client directly. Stop and get a human's go-ahead each time; see the
+authority-and-escalation skill for the sign-off protocol.

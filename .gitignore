@@ -19,3 +19,6 @@ node_modules/
 .clone.log
 *.log
 .readme-drafts/
+
+# audit scratch
+.audit/

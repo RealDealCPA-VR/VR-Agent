@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
   Re-brand the Hermes web dashboard to RealDeal CPA (name, tab title, favicon)
-  and rebuild it. Idempotent — safe to re-run after a `git pull` of upstream.
+  and rebuild it. Idempotent - safe to re-run after a `git pull` of upstream.
 
   The dashboard source lives in the (gitignored) hermes-agent clone, so this
   script is the tracked, reproducible record of those edits. Called by
@@ -12,11 +12,14 @@ $Root  = Split-Path -Parent $PSScriptRoot
 $Web   = Join-Path $Root 'hermes-agent\web'
 $Brand = Join-Path $Root 'vr-overlay\brand'
 
+# Read/write UTF-8 explicitly. PS 5.1 Get-Content -Raw reads ANSI (mangles non-ASCII)
+# and Set-Content -Encoding UTF8 writes a BOM (which can corrupt web source files).
+$NoBom = New-Object System.Text.UTF8Encoding($false)
 function Patch($path, $pattern, $replacement, $label) {
     if (-not (Test-Path $path)) { Write-Host "skip ($label): $path missing"; return }
-    $raw = Get-Content $path -Raw
+    $raw = [System.IO.File]::ReadAllText($path)
     if ($raw -match $pattern) {
-        ($raw -replace $pattern, $replacement) | Set-Content $path -Encoding UTF8 -NoNewline
+        [System.IO.File]::WriteAllText($path, ($raw -replace $pattern, $replacement), $NoBom)
         Write-Host "branded: $label"
     } else {
         Write-Host "ok ($label): already branded or pattern absent"

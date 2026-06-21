@@ -63,12 +63,16 @@ proven reconciliation — not a forced one.
 6. **Hunt duplicates & errors.** Same amount/payee twice; transposed digits (a diff
    divisible by 9 is the classic transposition tell); a payment booked as a deposit (diff =
    2x the item); off-by-a-period or wrong-account postings.
-7. **Compute the reconciling difference and PROVE it:**
-   `GL ending balance + deposits-in-transit − outstanding checks ± unrecorded bank items =
-   statement ending balance.` Show the bridge as a table. If both sides agree, the rec is
-   clean. **If it does not tie to $0.00, the account is NOT reconciled** — report the
-   residual variance, its sign, and where it most likely sits. Never plug a number to make
-   it balance.
+7. **Compute the reconciling difference and PROVE it** with the standard two-column bridge —
+   keep bank-side and book-side items on their own sides:
+   - **Adjusted bank balance** = statement ending balance + deposits in transit − outstanding
+     checks ± bank errors.
+   - **Adjusted book balance** = GL ending balance ± unrecorded bank items (interest, fees,
+     merchant/processor fees, ACH, NSF, chargebacks).
+   The rec proves when **Adjusted bank balance = Adjusted book balance** (difference $0.00).
+   Show the bridge as a table. **If it does not tie to $0.00, the account is NOT reconciled** —
+   report the residual variance, its sign, and where it most likely sits. Never plug a number
+   to make it balance.
 
 ## Stale & uncleared items
 - **Outstanding checks > 90–180 days (stale-dated)** — flag; many banks won't honor a check
@@ -108,8 +112,10 @@ proven reconciliation — not a forced one.
 1. **Bottom line first** — e.g. "Operating checking reconciled to the penny at $84,210.55 as
    of 5/31; 3 outstanding checks ($1,902.40) and one $35 bank fee booked," OR "NOT reconciled
    — $412.00 residual variance, GL over statement; likely a duplicated vendor payment."
-2. **The reconciliation bridge** as a table: statement ending balance → + deposits in transit
-   → − outstanding checks → ± unrecorded bank items → GL ending balance, proving to $0.00.
+2. **The reconciliation bridge** as a table, two columns proving to $0.00: the **bank side**
+   (statement ending balance → + deposits in transit → − outstanding checks → ± bank errors =
+   adjusted bank balance) and the **book side** (GL ending balance → ± unrecorded bank items =
+   adjusted book balance), where adjusted bank balance = adjusted book balance.
 3. **Outstanding items** table (checks + deposits in transit), with dates and amounts.
 4. **EXCEPTIONS QUEUE** — for the partner: unexplained variances, stale/escheatable checks,
    duplicates, broken opening balances, anything material or ambiguous. Never guessed,

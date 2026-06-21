@@ -35,15 +35,35 @@ apply → report counts and remaining unknowns.
 
 **Cleanup / catch-up** → assess scope (date range, # uncategorized, last reconciled date)
 → reconcile forward month by month → fix miscodings → clear suspense/undeposited funds →
-deliver a "books are current through <date>" summary with what changed.
+deliver a "books are current through <date>" summary with what changed. Any journal entry
+that is **material, unusual, or clears suspense/undeposited funds** must be proposed with
+Dr/Cr lines and rationale and signed off by a human **before** posting (`qb_journal_entry_create`).
+Auto-apply is limited to routine, non-material categorizations.
 
-**Recurring** → identify rent, subscriptions, loan payments, payroll → set or document
-recurring entries → note amounts/cadence so future months auto-match.
+**Recurring** → identify rent, subscriptions, loan payments, payroll → **document** the
+proposed recurring entries (amounts/cadence) so future months auto-match → get human
+sign-off before any recurring payment or payroll entry is **activated**. Never auto-set a
+recurring loan/payroll/AP payment yourself.
 
 ## Output
 Lead with status ("142 categorized, 6 need your call"). Give the exceptions as a short
 table. Keep a running note of decisions so the same payee is coded consistently next time.
 
+For each cleanup adjustment or journal entry, keep a **workpaper note**: what changed, why,
+the supporting evidence/source, the Dr/Cr lines, and who approved it. Attach support via
+`qb_attachment_add` where applicable and reference it in the "books current through <date>"
+summary.
+
 ## Guardrails
-Applying categorizations changes the books — confirm the exceptions table before applying
-unless pre-authorized. Never silently code an ambiguous material item.
+Applying routine, non-material categorizations changes the books — confirm the exceptions
+table before applying unless pre-authorized. Never silently code an ambiguous material item.
+
+**Never pre-authorizable — always require explicit human sign-off first:**
+- Moving money or cutting a payment: `qb_bill_pay`, `qb_check_create`, `qb_transfer_create`,
+  `qb_deposit_create`, AP payments, or receiving payments (`qb_payment_receive`).
+- Setting up or activating any recurring payment or payroll entry.
+- Posting a material or unusual journal entry, or any JE clearing suspense/undeposited funds
+  (`qb_journal_entry_create`).
+
+A blanket "unless pre-authorized" does **not** cover the above — only routine, immaterial,
+individually-confirmed items may be pre-authorized.

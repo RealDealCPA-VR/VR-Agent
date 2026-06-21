@@ -46,8 +46,10 @@ exception — flag it; never invent a threshold to self-clear an entry into GREE
 - Distinguish **repairs/maintenance** (expense) from **betterments/restorations/adaptations**
   (capitalize) per the tangible property regs (Treas. Reg. 1.263(a)-3). Routine maintenance safe
   harbor and small-taxpayer safe harbor may apply — **verify current-year** limits.
-- Land is **not** depreciated; split land from building on a purchase. Leasehold improvements and
-  leases may fall under ASC 842 — flag, don't guess.
+- Land is **not** depreciated; split land from building on a purchase. **Leasehold improvements** are
+  tangible fixed assets — capitalize and depreciate them over the shorter of useful life or the
+  remaining lease term — distinct from the **lease itself** (right-of-use asset / lease liability),
+  which falls under ASC 842. Don't equate the two; flag the lease accounting, don't guess.
 
 ## Step 2 — Maintain the asset register
 - For each asset record: ID/tag, description, class, **in-service date**, capitalized cost, salvage
