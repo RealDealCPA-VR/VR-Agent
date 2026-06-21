@@ -133,6 +133,24 @@ mcp_servers:
     args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-provenance/server.py"]
     timeout: 120
 
+  # Private cross-client benchmark mesh (the firm's own anonymized cohort norms).
+  vr-cohort:
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-cohort/server.py"]
+    timeout: 120
+
+  # Running liability/exposure ledger (catches aggregated immaterial decisions).
+  vr-risk:
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-risk/server.py"]
+    timeout: 120
+
+  # Deterministic realization + surge-triage engine (capacity-as-a-dial).
+  vr-capacity:
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-capacity/server.py"]
+    timeout: 120
+
   # --- Staged (enable once prerequisites are met) -------------------------
   # Tax — Lacerte (LacertMCP, .NET). Needs the dotnet SDK + a built server.
   # Add launchers/lacerte.cmd.tmpl, then uncomment:
