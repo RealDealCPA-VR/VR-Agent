@@ -1,0 +1,49 @@
+# Model profiles — how RealDeal CPA tunes itself to the LLM you choose.
+# scripts/optimize-skills.ps1 reads the active model (config model.default, or -Model),
+# matches it to a tier below, and OFFERS to apply that tier's settings. Nothing changes
+# without -Apply. Re-run any time you switch models.
+#
+# Rationale: a frontier model reasons well from lean guidance and long autonomy; a small/
+# local model needs explicit step-by-step scaffolding, tighter loops, and lower effort.
+
+tiers:
+  frontier:
+    # Top-tier reasoners — trust them: lean skills, high effort, long autonomy.
+    match: [opus, "gpt-5", "o3", "o4", "gemini-3-pro", "grok-4", "sonnet-4-6", "sonnet-4.6", "deepseek-r1"]
+    reasoning_effort: high          # OpenRouter/Nous honor this; native Anthropic ignores it harmlessly
+    max_turns: 90
+    skill_style: lean               # terse, principle-first guidance; trust the model's judgment
+    note: "Frontier: lean skills, high reasoning effort, long autonomy."
+
+  strong:
+    # Strong general models — a touch more structure.
+    match: [sonnet, "gpt-4.1", "gpt-4o", "gemini-3-flash", "mistral-large", "llama-3.3-70b", "qwen2.5-72b", glm-4, kimi]
+    reasoning_effort: high
+    max_turns: 70
+    skill_style: scaffolded         # explicit steps + a worked example per procedure
+    note: "Strong: scaffolded skills, high effort."
+
+  mid:
+    # Capable mid models — clear structure, examples, tighter loops.
+    match: ["haiku-4", "gpt-4o-mini", "gemini-3-flash-lite", "mixtral", "llama-3.1-70b", "qwen2.5-32b"]
+    reasoning_effort: medium
+    max_turns: 55
+    skill_style: scaffolded
+    note: "Mid: scaffolded skills, medium effort, tighter loops."
+
+  small:
+    # Small / local models — maximal explicitness, smallest context, low effort.
+    match: [haiku, mini, small, "8b", "7b", "3b", phi, gemma, "qwen2.5-7b", "llama-3.2", lmstudio, ollama]
+    reasoning_effort: low
+    max_turns: 40
+    skill_style: explicit           # numbered micro-steps, examples, guardrails, shorter skills
+    note: "Small/local: explicit micro-steps, low effort, short loops."
+
+# Used when the active model matches no pattern above.
+default_tier: strong
+
+# Skill-style guidance the -Deep re-tune passes to the tuning agents.
+skill_styles:
+  lean: "Keep skills concise and principle-first. State the goal, the key tools, the gates, and the non-obvious pitfalls. Trust the model to fill in routine steps. ~70-110 lines."
+  scaffolded: "Give explicit numbered steps with the exact tool per step and ONE short worked example per procedure. Keep the gates and pitfalls. ~100-150 lines."
+  explicit: "Maximal explicitness for a smaller model: short numbered micro-steps, the exact tool call per step, a worked example, and a 'STOP and ask if…' guardrail line per risky step. Prefer shorter, single-purpose skills. ~90-140 lines, simple sentences."

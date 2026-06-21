@@ -28,9 +28,12 @@ $cfg = (ReadText (Join-Path $Overlay 'config\config.yaml.tmpl')).Replace('__VRAG
 WriteText (Join-Path $Home_ 'config.yaml') $cfg
 Write-Host "rendered: config.yaml (root=$RootFwd)"
 
-# 2) Persona
-Copy-Item (Join-Path $Overlay 'SOUL.md') (Join-Path $Home_ 'SOUL.md') -Force
-Write-Host "synced: SOUL.md"
+# 2) Persona (+ optional active-model skill-style directive from optimize-skills)
+$soulText = ReadText (Join-Path $Overlay 'SOUL.md')
+$styleFile = Join-Path $Overlay 'config\model-style.md'
+if (Test-Path $styleFile) { $soulText = $soulText + "`n`n" + (ReadText $styleFile) }
+WriteText (Join-Path $Home_ 'SOUL.md') $soulText
+Write-Host "synced: SOUL.md$(if (Test-Path $styleFile) {' (+ model-style)'})"
 
 # 3) Render MCP launchers for external projects -> home/launchers/*.cmd
 $launchSrc = Join-Path $Overlay 'mcp\launchers'

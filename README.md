@@ -87,11 +87,26 @@ Most "AI for accounting" is a chatbot bolted onto a feature. RealDeal CPA is an 
 
 ### Self-improving by design
 
-- **Persistent memory** — `USER.md` / `MEMORY.md` + per-client profiles.
-- **Skill-creation loop** — it builds new skills as it learns your work.
-- **Background curator** — consolidates what it learns between sessions.
+- **Persistent memory** — `USER.md` / `MEMORY.md` + per-client profiles, with a **local
+  semantic-recall provider** (holographic — zero key, zero cost) layered on top.
+- **Skill-creation loop** — a background review after each turn captures corrections and
+  techniques into the right skill/memory; the `self-improvement` skill drives it for your firm.
+- **Background curator** — consolidates overlapping skills into umbrellas and archives stale ones.
+- **Promote what it learns** — `scripts/promote-skills.ps1` version-controls new agent skills.
 - **Parallel subagents** — delegates work to run concurrently.
 - **Multi-provider brain** — OpenRouter / Anthropic / others, switchable on the fly.
+
+### Optimize for your model
+
+Switching LLMs? `RealDeal CPA` tunes itself to the model you choose — reasoning effort,
+autonomy budget, and how skills are delivered (lean for frontier models, explicit for small/
+local ones). It's an **offer** — nothing changes without `-Apply`, and `-Revert` undoes it.
+
+```powershell
+.\scripts\optimize-skills.ps1                 # show what tuning the current model would get
+.\scripts\optimize-skills.ps1 -Model haiku    # preview tuning for a model before you switch
+.\scripts\optimize-skills.ps1 -Apply          # apply it (config + skill-style) and re-sync
+```
 
 ---
 

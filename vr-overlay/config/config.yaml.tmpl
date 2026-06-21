@@ -21,8 +21,8 @@ model:
 # Agent behavior — tuned for deep, multi-step professional work.
 # ---------------------------------------------------------------------------
 agent:
-  max_turns: 80                # generous headroom for long research/bookkeeping chains
-  reasoning_effort: "high"     # OpenRouter/Nous: think hard by default (override per task)
+  max_turns: 90
+  reasoning_effort: "high"
   verbose: false
 
 # ---------------------------------------------------------------------------
@@ -50,12 +50,15 @@ skills:
 # ---------------------------------------------------------------------------
 memory:
   memory_enabled: true
-  user_profile_enabled: true
-  memory_char_limit: 2200
-  user_char_limit: 1375
+  user_profile_enabled: true          # build a USER.md model of the partner (off by default in core)
+  memory_char_limit: 3000             # a pro agent accrues more durable firm facts (~1090 tokens)
+  user_char_limit: 2000               # richer partner/preferences model (~725 tokens)
   nudge_interval: 6                   # remind to save memories every 6 turns (was 10)
   flush_min_turns: 3                  # save before context is lost sooner (was 6)
-  # provider: honcho                  # optional AI-native user modeling (needs honcho-ai + key)
+  # Memory provider: holographic is fully LOCAL (stdlib SQLite, no key, no paid service) and
+  # adds semantic + compositional recall (fact_store/fact_feedback) on top of MEMORY.md/USER.md.
+  # For dialectic cross-session user-modeling instead, set 'honcho' (needs honcho-ai + a key).
+  provider: holographic
 
 # ---------------------------------------------------------------------------
 # Curator — background skill-library maintenance + consolidation into umbrellas.
@@ -63,9 +66,10 @@ memory:
 curator:
   enabled: true
   interval_hours: 72
-  min_idle_hours: 1
-  stale_after_days: 30
-  archive_after_days: 90
+  min_idle_hours: 2                   # only run when genuinely idle, never mid-task
+  stale_after_days: 45               # patient — pro skills (quarterly work) are used irregularly
+  archive_after_days: 120            # don't archive a quarterly-tax skill at 90 days
+  prune_builtins: true               # archive unused bundled skills too (recoverable)
   consolidate: true                   # LLM pass to merge overlapping skills into umbrellas
 
 # ---------------------------------------------------------------------------
