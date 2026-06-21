@@ -121,6 +121,18 @@ mcp_servers:
     args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-ledger/server.py"]
     timeout: 120
 
+  # Deterministic verification spine — re-derives balances/ties/depreciation with NO LLM.
+  vr-verify:
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-verify/server.py"]
+    timeout: 120
+
+  # Cryptographic provenance — hash-chained activity ledger + evidence bundles + dossiers.
+  vr-provenance:
+    command: "__VRAGENT_ROOT__/hermes-agent/.venv/Scripts/python.exe"
+    args: ["__VRAGENT_ROOT__/vr-overlay/mcp/vr-provenance/server.py"]
+    timeout: 120
+
   # --- Staged (enable once prerequisites are met) -------------------------
   # Tax — Lacerte (LacertMCP, .NET). Needs the dotnet SDK + a built server.
   # Add launchers/lacerte.cmd.tmpl, then uncomment:

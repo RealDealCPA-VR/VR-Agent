@@ -81,6 +81,31 @@ Use the template at `templates/workpaper.md` — copy it, don't free-form. Keep 
 - Workpapers may be discoverable; write only supportable, professional statements (Circular 230 conduct).
 - Never delete a prior workpaper; supersede with a new index and CF the old one.
 
+## Re-perform manifest (a workpaper that re-executes itself)
+Beyond prose + tick-marks, every numeric workpaper carries a machine-executable **manifest**: the
+exact tool calls and parameters that produced each tie-out, plus the SHA-256 hash of every source
+document read (via `provenance-and-evidence` / `record_read`). Embed it as a fenced block:
+
+```yaml
+reperform:
+  as_of: <date>
+  ties:
+    - name: A-1-bank-tie
+      tool: qb_general_ledger        # the exact wired tool + args used
+      args: { account: "Operating Checking", through: <date> }
+      expected: 48210.55
+      verified_by: vr-verify.check_ties
+  sources:
+    - { doc: "May bank statement.pdf", sha256: <hash> }
+```
+
+This makes the workpaper **re-performable**: anyone (you, the reviewing partner, a future auditor)
+can re-run the manifest against the current books and diff — "3 of 11 ties still hold; A-1 now off
+$412 because 2 transactions were edited post-close on 6/14." Run a `reperform` of prior *signed*
+workpapers on a cadence (tamper-watch): if a locked-period number silently changed underneath a
+completed close, that is an immediate EXCEPTIONS-QUEUE item. Numbers in the manifest are confirmed
+by the `deliverable-verification` spine before the workpaper is called done.
+
 ## Required output
 - **Bottom-line summary** — one or two lines: what was done and the conclusion (e.g. "A-1: operating bank reconciled to 6/30/25 statement; $0.00 difference; 2 outstanding checks listed").
 - **EXCEPTIONS QUEUE** — bulleted open/material/ambiguous items for the partner, each cross-referenced to its WP index. Empty is fine; "none" must be stated explicitly.
