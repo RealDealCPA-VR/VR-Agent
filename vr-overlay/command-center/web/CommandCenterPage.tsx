@@ -2,7 +2,7 @@
 // An n8n-style node canvas of the agent fleet: who is working on what, in which
 // state, on which LLM. Click a node to inspect it, change any agent's model from
 // the node, and add new specialized agents with a button. Themed via --color-* vars.
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode, CSSProperties } from "react";
 import {
   ReactFlow,
@@ -12,6 +12,7 @@ import {
   Handle,
   Position,
   ReactFlowProvider,
+  useNodesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { fetchJSON } from "@/lib/api";
@@ -113,10 +114,33 @@ function CommandCenterInner() {
     await api.patch(id, { model }); refresh();
   }, [refresh]);
 
-  const nodes = useMemo(() => (fleet?.agents || []).map((a) => ({
-    id: a.id, type: "agent", position: { x: a.x, y: a.y },
-    data: { agent: a, selected: selected === a.id, onSelect: setSelected, onModel, models: opts?.models || [a.model || ""] },
-  })), [fleet, selected, opts, onModel]);
+  // React Flow owns node positions so dragging is smooth and YOUR layout survives
+  // the live poll. The final position is saved to the backend on drag-stop, and a
+  // local map keeps it so an in-flight refresh can never snap a node back.
+  const posRef = useRef<Record<string, { x: number; y: number }>>({});
+  const [rfNodes, setRfNodes, onNodesChangeBase] = useNodesState<any>([]);
+
+  const onNodesChange = useCallback((changes: any[]) => {
+    for (const c of changes) {
+      if (c.type === "position" && c.position) posRef.current[c.id] = c.position;
+    }
+    onNodesChangeBase(changes);
+  }, [onNodesChangeBase]);
+
+  const onNodeDragStop = useCallback((_e: any, node: any) => {
+    const x = Math.round(node.position.x), y = Math.round(node.position.y);
+    posRef.current[node.id] = { x, y };
+    api.patch(node.id, { x, y });   // persist my layout (no refetch — keep the drag)
+  }, []);
+
+  useEffect(() => {
+    if (!fleet) return;
+    setRfNodes(fleet.agents.map((a) => ({
+      id: a.id, type: "agent",
+      position: posRef.current[a.id] ?? { x: a.x, y: a.y },
+      data: { agent: a, selected: selected === a.id, onSelect: setSelected, onModel, models: opts?.models || [a.model || ""] },
+    })));
+  }, [fleet, selected, opts, onModel, setRfNodes]);
 
   const edges = useMemo(() => (fleet?.edges || []).map((e, i) => ({
     id: `e${i}`, source: e.from, target: e.to, label: e.label, animated: true,
@@ -151,7 +175,8 @@ function CommandCenterInner() {
         {/* canvas */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {fleet && (
-            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView
+            <ReactFlow nodes={rfNodes} edges={edges} nodeTypes={nodeTypes} fitView
+              onNodesChange={onNodesChange} onNodeDragStop={onNodeDragStop}
               proOptions={{ hideAttribution: true }} onPaneClick={() => setSelected(null)}>
               <Background color="var(--color-border,#e5e5ea)" gap={22} />
               <Controls showInteractive={false} />
