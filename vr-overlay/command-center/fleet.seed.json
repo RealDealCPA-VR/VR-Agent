@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "note": "Default agent fleet for the RealDeal CPA Command Center. Copied to home/command-center/fleet.json on first run, then mutated by the UI (add agent / change model). Live work states are updated by the running agent at runtime; the items below are an illustrative seed so the canvas is populated before the agent is live.",
+  "agents": [
+    { "id": "remy", "name": "Remy", "role": "Lead Accountant", "kind": "agent",
+      "model": "anthropic/claude-opus-4.5", "status": "running",
+      "task": "Acme — month-end close (accruals)",
+      "skills": ["month-end-close", "client-context", "financial-statement-prep", "deliverable-verification"],
+      "tools": ["quickbooks", "vr-ledger", "vr-verify", "vr-provenance"],
+      "x": 540, "y": 60 },
+
+    { "id": "bookkeeping", "name": "Bookkeeping Agent", "role": "Categorize & reconcile", "kind": "agent",
+      "model": "anthropic/claude-haiku-4.5", "status": "running",
+      "task": "Borealis — transaction categorization (142 items)",
+      "skills": ["bookkeeping", "transaction-categorization", "bank-reconciliation"],
+      "tools": ["quickbooks", "vr-verify"],
+      "x": 120, "y": 60 },
+
+    { "id": "payroll", "name": "Payroll Agent", "role": "Payroll tax", "kind": "agent",
+      "model": "anthropic/claude-haiku-4.5", "status": "queued",
+      "task": "Cedar — Q2 Form 941 prep",
+      "skills": ["payroll-tax-prep-filing", "client-context"],
+      "tools": ["quickbooks", "vr-verify", "vr-provenance"],
+      "x": 120, "y": 240 },
+
+    { "id": "tax", "name": "Tax Agent", "role": "Research & nexus", "kind": "agent",
+      "model": "anthropic/claude-opus-4.5", "status": "idle",
+      "task": null,
+      "skills": ["tax-research", "sales-tax-nexus-determination", "year-end-close-1099"],
+      "tools": ["tax-rag", "browser", "vr-provenance"],
+      "x": 120, "y": 420 },
+
+    { "id": "sentinel", "name": "Sentinel", "role": "Portal & rule watch", "kind": "agent",
+      "model": "anthropic/claude-haiku-4.5", "status": "running",
+      "task": "Diffing IRS / state DOR / EFTPS portals vs yesterday",
+      "skills": ["portal-sentinel", "tax-research"],
+      "tools": ["browser", "desktop"],
+      "x": 120, "y": 600 },
+
+    { "id": "review", "name": "Review Agent", "role": "Independent adversarial review", "kind": "agent",
+      "model": "anthropic/claude-haiku-4.5", "status": "queued",
+      "task": "Awaiting Acme close — blind adversarial pass before sign-off",
+      "skills": ["adversarial-review", "deliverable-verification", "self-review-qc"],
+      "tools": ["vr-verify", "vr-provenance"],
+      "x": 540, "y": 300 },
+
+    { "id": "partner", "name": "Valentino", "role": "Partner — sign-off", "kind": "human",
+      "model": null, "status": "idle",
+      "task": "Reviews RED items; presses submit on filings & money",
+      "skills": [], "tools": [],
+      "x": 960, "y": 180 }
+  ],
+  "edges": [
+    { "from": "bookkeeping", "to": "remy", "label": "prepared work" },
+    { "from": "payroll", "to": "remy", "label": "prepared 941" },
+    { "from": "tax", "to": "remy", "label": "research" },
+    { "from": "sentinel", "to": "remy", "label": "rule-change flags" },
+    { "from": "remy", "to": "review", "label": "RED items → verify" },
+    { "from": "review", "to": "partner", "label": "passed → sign-off" }
+  ],
+  "work": [
+    { "id": "w1", "title": "Acme month-end close", "agent": "remy", "state": "running", "model": "anthropic/claude-opus-4.5", "client": "Acme", "pct": 62 },
+    { "id": "w2", "title": "Borealis categorization", "agent": "bookkeeping", "state": "running", "model": "anthropic/claude-haiku-4.5", "client": "Borealis", "pct": 78 },
+    { "id": "w3", "title": "Cedar 941 prep", "agent": "payroll", "state": "queued", "model": "anthropic/claude-haiku-4.5", "client": "Cedar", "pct": 0 },
+    { "id": "w4", "title": "Portal/rule diff", "agent": "sentinel", "state": "running", "model": "anthropic/claude-haiku-4.5", "client": "firm-wide", "pct": 40 },
+    { "id": "w5", "title": "Acme adversarial review", "agent": "review", "state": "queued", "model": "anthropic/claude-haiku-4.5", "client": "Acme", "pct": 0 }
+  ]
+}
