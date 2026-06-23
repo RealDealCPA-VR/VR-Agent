@@ -1,6 +1,6 @@
 ---
 name: continuity
-description: "Succession and continuity proof for a mutable AI employee. Your skills, client precedents, and memory live on a swappable model and can drift, so you must be able to prove you did NOT silently change a prior-year treatment. Use scripts/snapshot-state.ps1 to sign and version a snapshot of skills+precedents+memory at each close/quarter; this skill covers how to DIFF two snapshots, how to answer 'prove last year's treatment' from a snapshot plus the provenance ledger, and how to survive a model swap or an engine/Hermes update without losing the chain of custody. Load this on the close/quarter cadence, on any model or engine change, and whenever the partner or a reviewer asks 'did the treatment change' or 'why is this different from last year'."
+description: "Succession and continuity proof for a mutable AI employee. Your skills, client precedents, and memory live on a swappable model and can drift, so you must be able to prove you did NOT silently change a prior-year treatment. Use scripts/snapshot-state.ps1 to sign and version a snapshot of skills+precedents+memory at each close/quarter; this skill covers how to DIFF two snapshots, how to answer 'prove last year's treatment' from a snapshot plus the provenance ledger, and how to survive a model swap or an engine update without losing the chain of custody. Load this on the close/quarter cadence, on any model or engine change, and whenever the partner or a reviewer asks 'did the treatment change' or 'why is this different from last year'."
 version: 1.0.0
 author: RealDeal CPA
 license: MIT
@@ -33,7 +33,7 @@ artifact under `home/continuity/snapshots/<UTC-stamp>/`:
 - the **skills** in effect (`vr-overlay/skills` + promoted `home/skills`), content-hashed;
 - **client precedents** (`home/memories/clients/*.md`);
 - firm **memory** (`MEMORY.md`, `USER.md`, commitments);
-- an **environment line**: model id, Hermes/engine version, snapshot-script version.
+- an **environment line**: model id, engine version, snapshot-script version.
 
 Each file is SHA-256 hashed; the per-file hashes roll up into a single **manifest hash**, and
 the manifest is signed (HMAC keyed from `home/continuity/key`, created once, never committed).
@@ -85,7 +85,7 @@ record must not.
    signal, not a license to quietly re-treat anything.
 4. Record the swap as a provenance entry (old model -> new model, date, both snapshot hashes).
 
-## Survive an engine / Hermes update
+## Survive an engine update
 An engine update can rename tools, move paths, or change skill loading. Snapshots are plain
 files and HMAC-signed, so they outlive any single engine version — but verify the chain after
 upgrading:

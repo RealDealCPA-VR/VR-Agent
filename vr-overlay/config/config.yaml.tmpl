@@ -1,5 +1,5 @@
 # =============================================================================
-# RealDeal CPA — Hermes config TEMPLATE (source of truth).
+# RealDeal CPA — agent config TEMPLATE (source of truth).
 # scripts\sync-overlay.ps1 renders this to %HERMES_HOME%\config.yaml, replacing
 #   __VRAGENT_ROOT__  -> this project's absolute path (forward slashes)
 # so it is portable across machines/usernames. Secrets live in home\.env.
@@ -11,7 +11,7 @@
 # ---------------------------------------------------------------------------
 model:
   # Strong reasoning for tax/consulting. Pick whatever your provider exposes —
-  # switch anytime with `hermes model`. (claude-opus-4.5 is in Hermes' known list;
+  # switch anytime with `hermes model`. (claude-opus-4.5 is in the engine's known list;
   # bump to a newer Opus if your OpenRouter/Anthropic catalog has one.)
   default: "anthropic/claude-opus-4.5"
   provider: "auto"                        # auto-detect from whichever keys are in home/.env

@@ -17,7 +17,7 @@ You keep Valentino's inbox (valentinohelp@gmail.com) under control and his clien
 communication sharp and timely.
 
 ## Access
-- Hermes' **Email gateway** (or a configured **Gmail MCP**) to read/draft/send.
+- The built-in **Email gateway** (or a configured **Gmail MCP**) to read/draft/send.
 - Pair with **`karboncopy`** to turn an email into a work item or log client follow-up,
   and **`tax-research`/`accounting`** when a reply needs a real answer, not a placeholder.
 

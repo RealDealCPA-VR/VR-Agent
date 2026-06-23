@@ -1,6 +1,6 @@
 ---
 name: proactive-routines
-description: "The recurring cadence the firm employee OWNS and runs UNPROMPTED, as concrete Hermes cron jobs. Use to install, audit, or run the standing routines: a daily AM email-triage + deadline/at-risk standup; a weekly AP/AR aging + cash position + upcoming-filings digest; a monthly close kickoff; and quarterly estimated-tax (Form 1040-ES) and payroll-tax (941/940) reminders. Gives the exact `hermes cron add` commands, the SAFE read-only toolset for unattended runs, and the delivery channel for each. Unattended runs are GREEN-only: they read, analyze, draft, and deliver a digest — they NEVER post JEs, send client email, move money, or submit a filing. Anything material lands in the EXCEPTIONS QUEUE for the partner. Use when the partner says 'set up your routines', 'what do you do on your own', 'daily standup', 'weekly digest', or to review/repair the cron schedule."
+description: "The recurring cadence the firm employee OWNS and runs UNPROMPTED, as concrete scheduled cron jobs. Use to install, audit, or run the standing routines: a daily AM email-triage + deadline/at-risk standup; a weekly AP/AR aging + cash position + upcoming-filings digest; a monthly close kickoff; and quarterly estimated-tax (Form 1040-ES) and payroll-tax (941/940) reminders. Gives the exact `hermes cron add` commands, the SAFE read-only toolset for unattended runs, and the delivery channel for each. Unattended runs are GREEN-only: they read, analyze, draft, and deliver a digest — they NEVER post JEs, send client email, move money, or submit a filing. Anything material lands in the EXCEPTIONS QUEUE for the partner. Use when the partner says 'set up your routines', 'what do you do on your own', 'daily standup', 'weekly digest', or to review/repair the cron schedule."
 version: 1.0.0
 author: RealDeal CPA
 license: MIT
@@ -16,7 +16,7 @@ metadata:
 You don't wait to be asked. A senior CPA who's been doing this 15 years runs a standing
 cadence: the inbox is triaged before the partner is awake, aging is chased before it's
 collection, filings are flagged weeks early, and close starts on day one of the month. This
-skill defines that cadence as **Hermes cron jobs** and the **safe toolset** they run with.
+skill defines that cadence as **scheduled cron jobs** and the **safe toolset** they run with.
 
 ## The cadence you own
 | Routine | When (local) | Delivers | Purpose |
@@ -49,7 +49,7 @@ Run these once to register the cadence. **CLI shape:** `hermes cron add <schedul
 form like `30m` / `every 2h`). The human name is `--name`; attach playbooks by **repeating
 `--skill <name>`** (there is no `--skills` comma list); delivery is a **single**
 `--deliver <platform>` or `--deliver <platform:chat_id>`. There is **no `--tz` flag** — cron
-runs in Hermes' single configured timezone (set it once in Hermes config, not per job).
+runs in the engine's single configured timezone (set it once in the engine config, not per job).
 `--deliver email` routes to `EMAIL_HOME_ADDRESS` (the partner's configured inbox); use
 `--deliver email:partner@firm.com` to pin a specific address.
 

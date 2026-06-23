@@ -1,7 +1,7 @@
 """
 RealDeal CPA Command Center — backend routes.
 
-Deployed (by scripts/install-command-center.ps1) next to the Hermes dashboard server
+Deployed (by scripts/install-command-center.ps1) next to the dashboard server
 as hermes_cli/command_center_routes.py, alongside hermes_cli/command_center_fleet.py.
 web_server.py calls register(app, _require_token) once after the FastAPI app is built.
 

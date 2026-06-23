@@ -24,7 +24,7 @@ layout:
   radius: "0.75rem"                             # soft rounded corners
   density: "comfortable"
 
-# Replace the default (Hermes) backdrop with a clean white canvas + faint green
+# Replace the default (stock) backdrop with a clean white canvas + faint green
 # halo — explicit so none of the upstream backdrop art shows through.
 assets:
   bg: "radial-gradient(circle at 50% -10%, rgba(48,209,88,0.10), rgba(255,255,255,0) 55%)"

@@ -1,7 +1,7 @@
 """
 VRAGENT desktop-control MCP server.
 
-Gives the agent Windows GUI control (Hermes' built-in `computer_use` is macOS-only).
+Gives the agent Windows GUI control (the engine's built-in `computer_use` is macOS-only).
 Fast primitives go straight through pyautogui for a tight screenshot->act->verify
 loop; multi-step automation is delegated to the audited ai_rpa_system WorkflowExecutor
 (which runs a security scan and refuses CRITICAL-risk workflows by default).

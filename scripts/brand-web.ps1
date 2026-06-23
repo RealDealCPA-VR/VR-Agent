@@ -33,10 +33,18 @@ Patch (Join-Path $Web 'index.html') 'href="/favicon\.(ico|svg)"' 'href="/favicon
 Copy-Item (Join-Path $Brand 'favicon.svg') (Join-Path $Web 'public\favicon.svg') -Force
 Write-Host "copied: favicon.svg -> web/public"
 
-# 3) Header brand name (i18n default = English)
-Patch (Join-Path $Web 'src\i18n\en.ts') 'brand:\s*"Hermes Agent"' 'brand: "RealDeal CPA"' 'en.ts brand'
+# 3) All user-facing brand strings across ALL languages (header brand, achievements
+#    panel title, share-tweet text). Order: "Achievements" before bare "Agent".
+Get-ChildItem (Join-Path $Web 'src\i18n') -Filter '*.ts' -ErrorAction SilentlyContinue | ForEach-Object {
+    Patch $_.FullName 'Hermes Achievements' 'RealDeal CPA Achievements' "i18n $($_.Name) achievements"
+    Patch $_.FullName 'Hermes Agent' 'RealDeal CPA' "i18n $($_.Name) brand/tweet"
+}
 # 4) Sidebar wordmark (hardcoded JSX)
 Patch (Join-Path $Web 'src\App.tsx') 'Hermes(\s*<br />\s*)Agent' 'RealDeal${1}CPA' 'App.tsx wordmark'
+# 4b) FastAPI app title (shown in the dashboard's /docs + OpenAPI schema)
+Patch (Join-Path $Root 'hermes-agent\hermes_cli\web_server.py') 'FastAPI\(title="Hermes Agent"' 'FastAPI(title="RealDeal CPA"' 'web_server FastAPI title'
+# 4c) Telegram onboarding default bot name
+Patch (Join-Path $Web 'src\pages\ChannelsPage.tsx') 'bot_name: "Hermes Agent"' 'bot_name: "RealDeal CPA"' 'ChannelsPage bot_name'
 
 # 5) Rebuild the SPA that `hermes dashboard` serves (web -> hermes_cli/web_dist)
 Write-Host "`nRebuilding dashboard (npm run build)..." -ForegroundColor Cyan
