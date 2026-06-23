@@ -22,3 +22,4 @@ node_modules/
 
 # audit scratch
 .audit/
+vr-overlay/home/

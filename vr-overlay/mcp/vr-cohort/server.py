@@ -28,11 +28,12 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("vr-cohort")
 
-_DB_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+# Runtime DB lives under HERMES_HOME (gitignored), never inside the tracked overlay.
+_HOME = os.environ.get("HERMES_HOME") or os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
     "home",
-    "cohort",
 )
+_DB_DIR = os.path.join(_HOME, "cohort")
 _DB_PATH = os.path.join(_DB_DIR, "cohort.db")
 
 

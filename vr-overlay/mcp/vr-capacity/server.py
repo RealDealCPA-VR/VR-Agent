@@ -23,7 +23,8 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("vr-capacity")
 
-DB_DIR = Path("C:/Users/VR/Projects/VRAGENT/home/capacity")
+# Runtime DB under HERMES_HOME (gitignored), portable across machines.
+DB_DIR = Path(os.environ.get("HERMES_HOME") or (Path(__file__).resolve().parents[3] / "home")) / "capacity"
 DB_PATH = DB_DIR / "capacity.db"
 
 
