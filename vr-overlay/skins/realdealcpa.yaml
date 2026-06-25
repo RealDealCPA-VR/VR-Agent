@@ -27,7 +27,7 @@ colors:
 
 branding:
   agent_name: "RealDeal CPA"
-  welcome: "RealDeal CPA — your AI chief of staff. Accounting · tax · advisory · marketing. Type a task or /help."
+  welcome: "RealDeal CPA — your AI chief of staff. Accounting · tax · advisory · marketing. New here? Say \"let's do firm onboarding\" so I learn your firm first — otherwise type a task or /help."
   goodbye: "RealDeal CPA — signing off. ●"
   response_label: " ● RealDeal CPA "
   prompt_symbol: "❯"

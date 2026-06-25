@@ -2,7 +2,7 @@
 name: desktop-control
 description: "Control the Windows desktop/GUI via the 'desktop' MCP: screenshot, click, type, hotkeys, scroll, launch apps, and run audited multi-step workflows. Use for any on-screen automation the engine's macOS-only computer_use can't do."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [windows]
 metadata:

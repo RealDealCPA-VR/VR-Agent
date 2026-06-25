@@ -2,7 +2,7 @@
 name: tax-research
 description: "Authoritative US tax research and prep support: issue-spot, find controlling authority (IRC/Regs/rulings/cases), apply to facts, and write a defensible memo. Researches via web_search/browser and the engagement's own files, and reads client financials through the QuickBooks (qb_*) tools; never asserts uncertain positions as settled."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

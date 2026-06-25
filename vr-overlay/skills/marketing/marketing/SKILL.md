@@ -2,7 +2,7 @@
 name: marketing
 description: "Marketing and brand for RealDeal CPA: strategy, copy, campaigns, social, landing pages, and on-brand visual/video/audio media generated via Pixio. Holds the brand system so output stays consistent."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

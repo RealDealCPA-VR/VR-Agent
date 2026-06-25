@@ -2,7 +2,7 @@
 name: creative-studio
 description: "Open creative sandbox — anything Valentino points at: naming, copy, scripts, songs, stories, design direction, brainstorms, side projects, wild ideas. Drop the buttoned-up register and go all in."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

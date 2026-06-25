@@ -19,7 +19,7 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("vr-provenance")
 
-ROOT = Path("C:/Users/VR/Projects/VRAGENT/home/provenance")
+ROOT = Path(os.environ.get("HERMES_HOME") or (Path(__file__).resolve().parents[3] / "home")) / "provenance"
 EVIDENCE_DIR = ROOT / "evidence"
 DOSSIER_DIR = ROOT / "dossiers"
 LEDGER_PATH = ROOT / "ledger.jsonl"
@@ -54,6 +54,22 @@ def _read_ledger() -> list[dict]:
         if raw:
             lines.append(json.loads(raw))
     return lines
+
+
+def _ledger_head() -> tuple[str, int]:
+    """Return (prev_hash, next_seq) from the last ledger line without re-parsing
+    the whole chain. O(1)-ish: reads the file and json.loads only the last
+    non-blank line. Genesis -> (GENESIS, 0). Preserves the exact hash-chain
+    semantics verify_chain() recomputes."""
+    if not LEDGER_PATH.exists():
+        return GENESIS, 0
+    text = LEDGER_PATH.read_text(encoding="utf-8")
+    for raw in reversed(text.splitlines()):
+        raw = raw.strip()
+        if raw:
+            last = json.loads(raw)
+            return last["hash"], last["seq"] + 1
+    return GENESIS, 0
 
 
 def _json(obj) -> str:
@@ -93,14 +109,7 @@ def append_event(event_json: str) -> str:
     """
     _ensure_dirs()
     event = json.loads(event_json)
-    chain = _read_ledger()
-    if chain:
-        last = chain[-1]
-        prev_hash = last["hash"]
-        seq = last["seq"] + 1
-    else:
-        prev_hash = GENESIS
-        seq = 0
+    prev_hash, seq = _ledger_head()
     new_hash = _link_hash(prev_hash, event)
     entry = {"seq": seq, "prev_hash": prev_hash, "event": event, "hash": new_hash}
     with LEDGER_PATH.open("a", encoding="utf-8") as fh:

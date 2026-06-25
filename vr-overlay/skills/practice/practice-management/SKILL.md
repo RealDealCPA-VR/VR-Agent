@@ -2,7 +2,7 @@
 name: practice-management
 description: "Run the CPA practice via KarbonCopy: clients, contacts, work items, tasks, time, invoices, payments, and deadlines. Triage workload, chase blockers, and report status."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

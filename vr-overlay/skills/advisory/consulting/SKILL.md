@@ -2,7 +2,7 @@
 name: consulting
 description: "Client advisory and management consulting: financial analysis, forecasting, entity/structure advice, pricing, and engagement deliverables (decks, models, memos). Turns accounting/tax data into decisions."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

@@ -5,9 +5,9 @@ deploy time (`__VRAGENT_ROOT__` = this folder, `__PROJECTS_ROOT__` = its parent)
 **not** need the `C:\Users\VR\...` paths to match.
 
 ## 1. Prerequisites (on PATH)
-- **git**, **uv**, **Node 20.x** (required for the QuickBooks live COM binding), **npm**, **pnpm**
+- **git**, **uv**, **Node 20.x** (required for the QuickBooks live COM binding), **npm**
 - **QuickBooks Desktop** installed, for live bookkeeping (the MCP also runs in safe simulation without it)
-- *(optional)* **dotnet SDK** for Lacerte (LacertMCP); **Python 3.11** is provisioned by `uv`
+- *(optional)* **pnpm** — required only to run the KarbonCopy practice-mgmt sibling live; **ripgrep (`rg`)** for faster in-repo code/skill search; **dotnet SDK** for Lacerte (LacertMCP); **Python 3.11** is provisioned by `uv`
 
 ## 2. Expected layout
 Place this project and its sibling integration projects under the **same parent folder**:
@@ -39,10 +39,14 @@ cd VRAGENT
 
 ## 5. Verify
 ```powershell
-.\scripts\vragent.ps1 doctor        # green
-.\scripts\vragent.ps1 mcp list       # desktop / quickbooks / karboncopy / vr-ledger enabled
+.\scripts\vragent.ps1 doctor        # check the "API Connectivity" line shows OpenRouter/Anthropic connected, not just overall green
+.\scripts\vragent.ps1 mcp list       # desktop / quickbooks / karboncopy / vr-ledger / vr-verify / vr-provenance / vr-cohort / vr-risk / vr-capacity enabled
 .\scripts\vragent.ps1                # start the agent (run firm onboarding first — see below)
 ```
+
+Notes:
+- The doctor "API key or custom endpoint configured" line goes green just from a key *name* being present in `home\.env`, even with an empty value. The real signal is the **"API Connectivity"** line; if it says OpenRouter/Anthropic is not configured, paste a real key value into `home\.env`.
+- The boot banner may show "N commits behind — run `hermes update`". This is expected. Do **not** run `hermes update` — it un-pins the tested engine commit (`HERMES_PIN.txt`) and can break config/MCP/skill loading. See README Troubleshooting.
 
 ## 6. First day on the job
 Before production work, run the **`firm-onboarding`** flow so the agent learns your firm and

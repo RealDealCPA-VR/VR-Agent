@@ -24,7 +24,7 @@ import json
 import os
 from pathlib import Path
 
-ROOT = Path("C:/Users/VR/Projects/VRAGENT/home/provenance")
+ROOT = Path(os.environ.get("HERMES_HOME") or (Path(__file__).resolve().parents[1] / "home")) / "provenance"
 EVIDENCE_DIR = ROOT / "evidence"
 DOSSIER_DIR = ROOT / "dossiers"
 REPORT_DIR = ROOT / "reports"

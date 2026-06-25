@@ -2,7 +2,7 @@
 name: email-management
 description: "Inbox management for Valentino: triage, prioritize, draft replies, follow-ups, and turn emails into tasks. Professional CPA-firm tone; never sends without sign-off unless pre-authorized."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

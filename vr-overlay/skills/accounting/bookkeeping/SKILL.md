@@ -2,7 +2,7 @@
 name: bookkeeping
 description: "Day-to-day bookkeeping: categorize transactions, clean up messy books, manage recurring entries, AP/AR, and catch-up work. Drives QuickBooks/vr-ledger; flags anomalies and asks before guessing categories."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

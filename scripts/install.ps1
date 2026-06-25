@@ -16,6 +16,29 @@ $Pin = '2ab09a6c50836d8cc407e4957c828161d0bbd81b'   # see HERMES_PIN.txt
 
 function Step($m) { Write-Host "`n=== $m ===" -ForegroundColor Cyan }
 
+Step "0/8 Preflight: verify prerequisites on PATH"
+# Fail fast with an actionable message instead of a cryptic mid-run error.
+foreach ($tool in @('git', 'uv', 'node', 'npm')) {
+    if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) {
+        throw "$tool not found on PATH - install it first (see SETUP-NEW-MACHINE.md section 1)."
+    }
+}
+# pnpm is optional - only the KarbonCopy sibling needs it.
+if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) {
+    Write-Warning "pnpm not found on PATH - KarbonCopy live MCP will be unavailable until pnpm is installed."
+}
+# Node 20.x is required for the QuickBooks live COM binding (winax). Hermes itself
+# runs on newer Node, so this is a warning, not a hard stop.
+try {
+    $nv = (node --version) -replace '^v', ''
+    $major = [int]($nv.Split('.')[0])
+    if ($major -ge 22) {
+        Write-Warning "Node $nv detected - the QuickBooks live COM binding (winax) only builds on Node 20.x. Hermes still runs, but the QB live MCP will fail to build."
+    }
+} catch {
+    Write-Warning "Could not determine Node version - ensure Node 20.x for the QuickBooks live COM binding."
+}
+
 Step "1/8 Clone upstream Hermes (pinned)"
 if (-not (Test-Path (Join-Path $Hermes '.git'))) {
     git clone https://github.com/NousResearch/hermes-agent.git $Hermes
@@ -37,6 +60,34 @@ if (Test-Path "$Projects/RPA") { uv pip install --directory $Hermes -e "$Project
 else { Write-Warning "RPA project not found at $Projects/RPA - desktop-control MCP will be unavailable until it's present." }
 if (Test-Path "$Projects/VR-Ledger") { uv pip install --directory $Hermes -e "$Projects/VR-Ledger" }
 else { Write-Warning "VR-Ledger project not found at $Projects/VR-Ledger - vr-ledger MCP will be unavailable until it's present." }
+
+# Declare the overlay's own MCP runtime dep (mcp) independently of the upstream extras.
+$mcpReqs = Join-Path $Root 'vr-overlay/mcp/requirements.txt'
+if (Test-Path $mcpReqs) { uv pip install --directory $Hermes -r $mcpReqs }
+
+Step "4b/8 Build Node sibling MCPs: QuickBooks (npm) + KarbonCopy (pnpm)"
+# Same warn-and-skip-if-absent pattern as the Python siblings above. Idempotent:
+# skip the build when the artifact already exists (unless -force is desired).
+$qb = "$Projects/Quickbooks MCP Desktop"
+if (Test-Path $qb) {
+    if (-not (Test-Path "$qb/dist/index.js")) {
+        Push-Location $qb
+        try {
+            if (Test-Path "$qb/package-lock.json") { npm ci } else { npm install }
+            npm run build
+        } finally { Pop-Location }
+    } else { Write-Host "QuickBooks MCP already built (dist/index.js present)" }
+} else { Write-Warning "Quickbooks MCP Desktop not found at $qb - quickbooks MCP will be unavailable until it's present." }
+
+$kc = "$Projects/KarbonCopy"
+if (Test-Path $kc) {
+    if (-not (Test-Path "$kc/node_modules")) {
+        if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+            Push-Location $kc
+            try { pnpm install } finally { Pop-Location }
+        } else { Write-Warning "pnpm not found on PATH - cannot install KarbonCopy; the karboncopy MCP will be unavailable. Install pnpm (npm install -g pnpm) and re-run." }
+    } else { Write-Host "KarbonCopy already installed (node_modules present)" }
+} else { Write-Warning "KarbonCopy not found at $kc - karboncopy MCP will be unavailable until it's present." }
 
 Step "5/8 Seed built-in + finance/research skills into HERMES_HOME"
 $homeSkills = Join-Path $Root 'home\skills'
@@ -68,7 +119,14 @@ Step "7/8 Sync overlay (config + persona) into HERMES_HOME"
 Step "8/8 Re-brand the web dashboard to RealDeal CPA (+ rebuild)"
 & (Join-Path $PSScriptRoot 'brand-web.ps1')
 
-Write-Host "`nDone. Next:" -ForegroundColor Green
-Write-Host "  1. Put an LLM key in home\.env  (OPENROUTER_API_KEY or ANTHROPIC_API_KEY)"
-Write-Host "  2. .\scripts\vragent.ps1 doctor"
-Write-Host "  3. .\scripts\vragent.ps1            # start the agent"
+$envFile = Join-Path $Root 'home\.env'
+$envState = if (Test-Path $envFile) { "(already created - fill in your key)" } else { "(will be created on first sync from env.example)" }
+
+Write-Host "`nDone. Get started in 3 steps:" -ForegroundColor Green
+Write-Host "  1. Add an LLM key to your .env $envState"
+Write-Host "       Path: $envFile"
+Write-Host "       Open: notepad `"$envFile`""
+Write-Host "       Set OPENROUTER_API_KEY or ANTHROPIC_API_KEY."
+Write-Host "       Get an OpenRouter key at https://openrouter.ai/keys"
+Write-Host "  2. Verify:  .\scripts\vragent.ps1 doctor"
+Write-Host "  3. Start:   .\scripts\vragent.ps1"

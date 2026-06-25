@@ -2,7 +2,7 @@
 name: accounting
 description: "General-ledger accounting: journal entries, chart of accounts, reconciliations, month-end close, financial statements. Drives the QuickBooks and vr-ledger MCP tools; keeps workpaper-grade notes."
 version: 1.0.0
-author: VRAGENT
+author: RealDeal CPA
 license: MIT
 platforms: [linux, macos, windows]
 metadata:

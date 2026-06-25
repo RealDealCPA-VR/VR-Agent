@@ -8,7 +8,7 @@
 
 **It runs QuickBooks. It runs Windows. It runs the browser. From the terminal.**
 
-`Black · White · Green` &nbsp;•&nbsp; `Windows` &nbsp;•&nbsp; `102 skills` &nbsp;•&nbsp; `16 SOP runbooks` &nbsp;•&nbsp; `4 MCP servers · 204 tools` &nbsp;•&nbsp; `CLI · TUI · Dashboard · Slack`
+`Black · White · Green` &nbsp;•&nbsp; `Windows` &nbsp;•&nbsp; `117 skills (47 custom)` &nbsp;•&nbsp; `17 SOP runbooks` &nbsp;•&nbsp; `9 MCP servers · ~223 tools` &nbsp;•&nbsp; `CLI · TUI · Dashboard · Slack`
 
 [Install](#install) · [Quickstart](#quickstart) · [Commands](#command-reference) · [Skill Catalog](#the-skill-catalog) · [Safety Model](#the-authority-model--trustworthy-by-design) · [Architecture](#architecture) · [FAQ](#troubleshooting--faq)
 
@@ -21,7 +21,7 @@
 | | |
 |---|---|
 | **Role** | Staff accountant / CPA — bookkeeping, tax prep, advisory, practice ops |
-| **Experience** | 15+ years of firm practice, encoded as 16 professional SOP runbooks |
+| **Experience** | 15+ years of firm practice, encoded as 17 professional SOP runbooks |
 | **Knows how a firm runs** | Yes — and onboards to learn *yours* on day one |
 | **Operates** | QuickBooks Desktop · the Windows desktop (any app) · the web browser |
 | **Leaves a paper trail** | A reviewable workpaper for every task |
@@ -39,7 +39,7 @@ Most "AI for accounting" is a chatbot bolted onto a feature. RealDeal CPA is an 
 | | A tool / chatbot | **RealDeal CPA** |
 |---|---|---|
 | **Onboarding** | None — starts cold every time | First-day interview; learns *your* firm + clients |
-| **Method** | Ad-hoc answers | 16 professional **SOP runbooks** it actually follows |
+| **Method** | Ad-hoc answers | 17 professional **SOP runbooks** it actually follows |
 | **Evidence** | A chat log | A reviewable **workpaper** for every task |
 | **Judgment** | Guesses on ambiguity | Routes material/ambiguous items to an **exceptions queue** |
 | **Authority** | Acts freely, or not at all | Tiered **Green / Yellow / Red** gates — it prepares filings, *you* submit |
@@ -63,14 +63,16 @@ Most "AI for accounting" is a chatbot bolted onto a feature. RealDeal CPA is an 
 
 | Surface | What's wired | Count |
 |---|---|---|
-| **Skills** | Enabled skills loaded on the agent | **102** |
-| **SOP runbooks** | Professional, step-by-step procedures | **16** |
-| **MCP tool servers** | desktop · quickbooks · karboncopy · vr-ledger | **4** |
-| **Tools across servers** | 14 + 150 + 33 + 7 | **204** |
+| **Skills** | Enabled skills loaded on the agent (47 custom firm skills) | **117** |
+| **SOP runbooks** | Professional, step-by-step procedures | **17** |
+| **MCP tool servers** | desktop · quickbooks · karboncopy · vr-ledger · vr-verify · vr-provenance · vr-cohort · vr-risk · vr-capacity | **9** |
+| **Tools across servers** | 14 + 150 + 33 + 7 + 6 + 4 + 3 + 3 + 3 | **~223** |
 | **Web** | `web_search` + full headless-Chromium automation | navigate / click / type / screenshot / run JS |
 | **Interfaces** | CLI · TUI · branded web dashboard · Slack | **4** |
 
-### The 4 MCP tool servers
+> The live boot banner may report a slightly higher tool total than the per-server sum above — FastMCP registers a few framework tools beyond the ones counted here. Treat the total as approximate.
+
+### The 9 MCP tool servers
 
 | Server | Tools | What it controls |
 |---|---|---|
@@ -78,6 +80,11 @@ Most "AI for accounting" is a chatbot bolted onto a feature. RealDeal CPA is an 
 | **quickbooks** | 150 | QuickBooks Desktop. **Safe SIMULATION by default**; live mode talks to QB Desktop |
 | **karboncopy** | 33 | Practice management |
 | **vr-ledger** | 7 | Plain-text double-entry ledger |
+| **vr-verify** | 6 | Deterministic verification — re-derives numbers with no LLM, so results can't drift |
+| **vr-provenance** | 4 | Hash-chained activity ledger + evidence bundles + client dossiers |
+| **vr-cohort** | 3 | Private cross-client benchmark mesh |
+| **vr-risk** | 3 | Running liability / exposure ledger |
+| **vr-capacity** | 3 | Realization + surge-triage engine |
 
 ### Capability packs
 
@@ -112,7 +119,7 @@ local ones). It's an **offer** — nothing changes without `-Apply`, and `-Rever
 
 ## Install
 
-> **Prereqs (on PATH):** Windows · git · uv · Node 20 · npm · pnpm. **QuickBooks Desktop** for live books (the MCP also runs in safe simulation without it). Paths are templated and portable across machines — see [`SETUP-NEW-MACHINE.md`](SETUP-NEW-MACHINE.md).
+> **Prereqs (on PATH):** Windows · git · uv · Node 20 · npm. *(pnpm optional — required only to run the KarbonCopy practice-mgmt sibling live.)* **QuickBooks Desktop** for live books (the MCP also runs in safe simulation without it). Paths are templated and portable across machines — see [`SETUP-NEW-MACHINE.md`](SETUP-NEW-MACHINE.md).
 
 ```powershell
 git clone https://github.com/RealDealCPA-VR/VR-Agent.git VRAGENT
@@ -134,8 +141,8 @@ ANTHROPIC_API_KEY=...
 ### Verify
 
 ```powershell
-.\scripts\vragent.ps1 doctor      # expect green
-.\scripts\vragent.ps1 mcp list    # desktop / quickbooks / karboncopy / vr-ledger enabled
+.\scripts\vragent.ps1 doctor      # check the "API Connectivity" line shows OpenRouter/Anthropic connected — not just overall green (see FAQ)
+.\scripts\vragent.ps1 mcp list    # desktop / quickbooks / karboncopy / vr-ledger / vr-verify / vr-provenance / vr-cohort / vr-risk / vr-capacity enabled
 ```
 
 ---
@@ -186,7 +193,7 @@ ANTHROPIC_API_KEY=...
 
 ## The skill catalog
 
-**102 enabled skills.** The professional core is 16 SOP runbooks the agent actually follows:
+**117 enabled skills (47 custom firm skills).** The professional core is 17 SOP runbooks the agent actually follows:
 
 | Bookkeeping & close | Tax | Specialized & systems |
 |---|---|---|
@@ -196,6 +203,7 @@ ANTHROPIC_API_KEY=...
 | accounts-payable | year-end-close-1099 | deferred-revenue-recognition (ASC 606) |
 | accounts-receivable | | new-client-onboarding |
 | financial-statement-prep | | quickbooks-operating-guide |
+| continuous-close (always-on rolling close / audit-readiness asymptote) | | |
 
 ### Firm / employee skills
 
@@ -209,7 +217,7 @@ ANTHROPIC_API_KEY=...
 | `communication-cadence` | Keeps a professional comms rhythm |
 | `proactive-routines` | Runs recurring work on its own |
 
-Plus the wider library of **102** skills — image generation, web research, Google Workspace, finance modeling, document authoring, and more.
+Plus the wider library of **117** skills — image generation, web research, Google Workspace, finance modeling, document authoring, and more.
 
 ---
 
@@ -255,8 +263,11 @@ MCP servers (sibling projects under the same parent folder):
 **`Hermes is not installed yet. Run: .\scripts\install.ps1`**
 The venv/binary isn't built. Run `.\scripts\install.ps1` from the repo root.
 
-**`doctor` isn't green.**
-Confirm prereqs are on PATH (git · uv · Node 20 · npm · pnpm) and that `home\.env` has a valid `OPENROUTER_API_KEY` or `ANTHROPIC_API_KEY`.
+**`doctor` shows a green "API key or custom endpoint configured" line but the agent still can't reach a model.**
+That top-line check passes on the mere *presence* of a key name in `home\.env` (even `OPENROUTER_API_KEY=` with no value), so a green there is not proof a key is set. Look instead at the **"API Connectivity"** section lower in the output: if it reads "OpenRouter API (not configured)" / "Anthropic (not configured)", you still need to paste a real key value into `home\.env`. Also confirm prereqs are on PATH (git · uv · Node 20 · npm; pnpm only if you run the KarbonCopy sibling).
+
+**Boot banner says "N commits behind — run `hermes update`."**
+Ignore it — do NOT run `hermes update` on this overlay. The overlay pins a tested engine commit (see `HERMES_PIN.txt`); that banner is upstream's update nag measured against `origin/main`. Running `hermes update` moves you off the validated commit and can break config / MCP / skill loading. Update the engine only deliberately, via a fresh re-clone + re-pin.
 
 **An MCP server is missing from `mcp list`.**
 The matching sibling project isn't present under the parent folder. Add it, or comment it out of `vr-overlay/config/config.yaml.tmpl` and re-run `sync-overlay.ps1`.

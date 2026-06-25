@@ -29,7 +29,7 @@ type Options = { models: string[]; skills: string[]; tools: string[]; statuses: 
 
 const STATUS_COLOR: Record<string, string> = {
   running: "#30D158", queued: "#FF9F0A", idle: "#8E8E93",
-  blocked: "#FF3B30", review: "#0A84FF", done: "#34C759",
+  blocked: "#FF3B30", review: "#FF9F0A", done: "#34C759",
 };
 const shortModel = (m?: string | null) => (m ? m.split("/").pop()!.replace("claude-", "").replace("-preview", "") : "—");
 
@@ -41,6 +41,7 @@ const api = {
   add: (body: Record<string, unknown>) =>
     fetchJSON("/api/command-center/agents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
   remove: (id: string) => fetchJSON(`/api/command-center/agents/${id}`, { method: "DELETE" }),
+  reset: () => fetchJSON("/api/command-center/reset", { method: "POST" }),
 };
 
 // ---- custom node -----------------------------------------------------------
@@ -80,13 +81,14 @@ function AgentNode({ data }: { data: any }) {
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => { e.stopPropagation(); data.onModel(a.id, e.target.value); }}
               title="LLM assigned to this agent"
+              aria-label="Model for this agent"
               style={{ fontSize: 10.5, maxWidth: 120, border: "1px solid var(--color-border,#ddd)", borderRadius: 8, background: "var(--color-muted,#f5f5f7)", color: "inherit", padding: "2px 4px" }}
             >
               {(data.models as string[]).map((m) => <option key={m} value={m}>{shortModel(m)}</option>)}
             </select>
           </div>
         )}
-        {human && <div style={{ marginTop: 6, fontSize: 10, fontWeight: 700, color: "#0A84FF", textTransform: "uppercase", letterSpacing: 0.4 }}>● sign-off gate</div>}
+        {human && <div style={{ marginTop: 6, fontSize: 10, fontWeight: 700, color: "var(--color-primary, #30D158)", textTransform: "uppercase", letterSpacing: 0.4 }}>● sign-off gate</div>}
       </div>
     </div>
   );
@@ -99,19 +101,39 @@ function CommandCenterInner() {
   const [opts, setOpts] = useState<Options | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try { setFleet(await api.state()); } catch { /* ignore poll error */ }
   }, []);
+  // One-shot options load that self-heals: keep retrying on the poll until it lands.
+  const loadOpts = useCallback(() => {
+    api.options().then((o) => setOpts(o)).catch(() => {});
+  }, []);
   useEffect(() => {
-    api.options().then(setOpts).catch(() => {});
+    loadOpts();
     refresh();
-    const t = setInterval(refresh, 4000);
-    return () => clearInterval(t);
-  }, [refresh]);
+    let t: ReturnType<typeof setInterval> | null = null;
+    const tick = () => { refresh(); if (!opts) loadOpts(); };
+    const start = () => { if (t === null) t = setInterval(tick, 4000); };
+    const stop = () => { if (t !== null) { clearInterval(t); t = null; } };
+    // Pause the poll (and its per-tick disk read) while the tab is backgrounded.
+    const onVis = () => {
+      if (document.visibilityState === "visible") { tick(); start(); } else { stop(); }
+    };
+    if (document.visibilityState === "visible") start();
+    document.addEventListener("visibilitychange", onVis);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVis); };
+  }, [refresh, loadOpts, opts]);
 
   const onModel = useCallback(async (id: string, model: string) => {
-    await api.patch(id, { model }); refresh();
+    try {
+      await api.patch(id, { model });
+      setErr(null);
+    } catch {
+      setErr("Couldn't change model — retry");
+    }
+    refresh(); // snap the select back to server truth (success or failure)
   }, [refresh]);
 
   // React Flow owns node positions so dragging is smooth and YOUR layout survives
@@ -165,9 +187,38 @@ function CommandCenterInner() {
             </span>
           ))}
         </div>
+        {err && (
+          <span role="alert" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 600, color: "var(--color-destructive, #FF3B30)", background: "var(--color-muted, #f5f5f7)", border: "1px solid var(--color-destructive, #FF3B30)", borderRadius: 9, padding: "4px 10px" }}>
+            {err}
+            <button onClick={() => setErr(null)} aria-label="Dismiss error"
+              style={{ border: "none", background: "transparent", color: "inherit", cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}>×</button>
+          </span>
+        )}
         <div style={{ flex: 1 }} />
-        <button onClick={() => setShowAdd(true)}
-          style={{ background: "var(--color-primary, #30D158)", color: "#fff", border: "none", borderRadius: 10, padding: "8px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => { setErr(null); loadOpts(); }} disabled={!!opts}
+          title={opts ? "Agent options loaded" : "Retry loading agent options"}
+          style={{ background: "var(--color-muted, #f5f5f7)", color: "inherit", border: "1px solid var(--color-border, #ddd)", borderRadius: 10, padding: "8px 12px", fontWeight: 600, fontSize: 13, cursor: opts ? "default" : "pointer", display: opts ? "none" : "inline-block" }}>
+          Retry loading options
+        </button>
+        <button onClick={async () => {
+            if (!confirm("Reset to the default fleet? This discards added agents and layout changes.")) return;
+            try {
+              await api.reset();
+              posRef.current = {};
+              setSelected(null);
+              setErr(null);
+              refresh();
+            } catch {
+              setErr("Couldn't reset layout — retry");
+            }
+          }}
+          title="Discard added agents and layout changes, re-seed the default fleet"
+          style={{ background: "var(--color-muted, #f5f5f7)", color: "inherit", border: "1px solid var(--color-border, #ddd)", borderRadius: 10, padding: "8px 14px", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+          Reset layout
+        </button>
+        <button onClick={() => setShowAdd(true)} disabled={!opts}
+          title={opts ? "Add a new agent" : "Loading options…"}
+          style={{ background: "var(--color-primary, #30D158)", color: "#fff", border: "none", borderRadius: 10, padding: "8px 14px", fontWeight: 700, fontSize: 13, cursor: opts ? "pointer" : "default", opacity: opts ? 1 : 0.5 }}>
           + Add Agent
         </button>
       </div>
@@ -193,12 +244,12 @@ function CommandCenterInner() {
                 <div style={{ fontWeight: 800, fontSize: 17 }}>{sel.name}</div>
                 <div style={{ fontSize: 12, opacity: 0.6 }}>{sel.kind === "human" ? "Partner — sign-off" : sel.role}</div>
               </div>
-              <button onClick={() => setSelected(null)} style={{ border: "none", background: "transparent", fontSize: 18, cursor: "pointer", opacity: 0.5 }}>×</button>
+              <button onClick={() => setSelected(null)} aria-label="Close panel" style={{ border: "none", background: "transparent", fontSize: 18, cursor: "pointer", opacity: 0.5 }}>×</button>
             </div>
             <Row label="Status"><span style={{ color: STATUS_COLOR[sel.status], fontWeight: 700, textTransform: "uppercase", fontSize: 12 }}>{sel.status}</span></Row>
             {sel.kind !== "human" && (
               <Row label="LLM">
-                <select value={sel.model || ""} onChange={(e) => onModel(sel.id, e.target.value)}
+                <select value={sel.model || ""} onChange={(e) => onModel(sel.id, e.target.value)} aria-label="Model"
                   style={{ width: "100%", padding: "6px 8px", borderRadius: 8, border: "1px solid var(--color-border,#ddd)", background: "var(--color-muted,#f5f5f7)", color: "inherit", fontSize: 12 }}>
                   {(opts?.models || []).map((m) => <option key={m} value={m}>{m}</option>)}
                 </select>
@@ -220,7 +271,10 @@ function CommandCenterInner() {
               </Row>
             )}
             {sel.id !== "remy" && sel.id !== "partner" && (
-              <button onClick={async () => { await api.remove(sel.id); setSelected(null); refresh(); }}
+              <button onClick={async () => {
+                  try { await api.remove(sel.id); setSelected(null); setErr(null); refresh(); }
+                  catch { setErr("Couldn't remove agent — retry"); }
+                }}
                 style={{ marginTop: 18, width: "100%", border: "1px solid #FF3B30", color: "#FF3B30", background: "transparent", borderRadius: 9, padding: "8px", fontSize: 12, cursor: "pointer" }}>
                 Remove agent
               </button>
@@ -258,27 +312,39 @@ function AddAgentModal({ opts, onClose, onAdded }: { opts: Options; onClose: () 
   const [skills, setSkills] = useState<string[]>([]);
   const [tools, setTools] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+  const [modalErr, setModalErr] = useState<string | null>(null);
   const toggle = (arr: string[], set: (v: string[]) => void, v: string) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+  // Escape closes the modal (a11y keyboard affordance).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const submit = async () => {
     if (!name.trim()) return;
     setBusy(true);
-    try { await api.add({ name, role, model, skills, tools }); onAdded(); } finally { setBusy(false); }
+    setModalErr(null);
+    try { await api.add({ name, role, model, skills, tools }); onAdded(); }
+    catch { setModalErr("Couldn't add agent — retry"); }
+    finally { setBusy(false); }
   };
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ width: 460, maxHeight: "85vh", overflowY: "auto", background: "var(--color-card,#fff)", color: "var(--color-card-foreground,#1d1d1f)", borderRadius: 16, padding: 22, boxShadow: "0 20px 60px rgba(0,0,0,.3)" }}>
+      <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Add an agent"
+        style={{ width: 460, maxHeight: "85vh", overflowY: "auto", background: "var(--color-card,#fff)", color: "var(--color-card-foreground,#1d1d1f)", borderRadius: 16, padding: 22, boxShadow: "0 20px 60px rgba(0,0,0,.3)" }}>
         <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 2 }}>Add an agent</div>
         <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 14 }}>A new specialized worker on your fleet.</div>
-        <Field label="Name"><input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Marketing Agent" style={inp} /></Field>
+        <Field label="Name"><input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Marketing Agent" autoFocus style={inp} /></Field>
         <Field label="Role / what it owns"><input value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Campaigns & brand" style={inp} /></Field>
         <Field label="LLM">
-          <select value={model} onChange={(e) => setModel(e.target.value)} style={inp}>
+          <select value={model} onChange={(e) => setModel(e.target.value)} aria-label="Model" style={inp}>
             {opts.models.map((m) => <option key={m} value={m}>{m}</option>)}
           </select>
         </Field>
         <Field label={`Skills (${skills.length})`}><Picker all={opts.skills} sel={skills} onToggle={(v) => toggle(skills, setSkills, v)} /></Field>
         <Field label={`Tools (${tools.length})`}><Picker all={opts.tools} sel={tools} onToggle={(v) => toggle(tools, setTools, v)} /></Field>
+        {modalErr && <div role="alert" style={{ marginTop: 12, fontSize: 12, fontWeight: 600, color: "var(--color-destructive, #FF3B30)" }}>{modalErr}</div>}
         <div style={{ display: "flex", gap: 10, marginTop: 18, justifyContent: "flex-end" }}>
           <button onClick={onClose} style={{ ...btn, background: "var(--color-muted,#f5f5f7)", color: "inherit" }}>Cancel</button>
           <button onClick={submit} disabled={busy || !name.trim()} style={{ ...btn, background: "var(--color-primary,#30D158)", color: "#fff", opacity: busy || !name.trim() ? 0.5 : 1 }}>{busy ? "Adding…" : "Add agent"}</button>
@@ -293,14 +359,25 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   return <div style={{ marginBottom: 12 }}><div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 0.4, opacity: 0.55, marginBottom: 5 }}>{label}</div>{children}</div>;
 }
 function Picker({ all, sel, onToggle }: { all: string[]; sel: string[]; onToggle: (v: string) => void }) {
+  const [q, setQ] = useState("");
+  const shown = q.trim() ? all.filter((v) => v.toLowerCase().includes(q.toLowerCase())) : all;
+  const muted: CSSProperties = { fontSize: 11, opacity: 0.5, padding: "4px 2px" };
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 130, overflowY: "auto", padding: 6, border: "1px solid var(--color-border,#eee)", borderRadius: 9 }}>
-      {all.map((v) => {
-        const on = sel.includes(v);
-        return (
-          <button key={v} onClick={() => onToggle(v)} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 999, cursor: "pointer", border: `1px solid ${on ? "var(--color-primary,#30D158)" : "var(--color-border,#ddd)"}`, background: on ? "var(--color-primary,#30D158)" : "transparent", color: on ? "#fff" : "inherit" }}>{v}</button>
-        );
-      })}
+    <div>
+      {all.length > 8 && (
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter…" aria-label="Filter list"
+          style={{ ...inp, padding: "5px 8px", fontSize: 12, marginBottom: 6 }} />
+      )}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 130, overflowY: "auto", padding: 6, border: "1px solid var(--color-border,#eee)", borderRadius: 9 }}>
+        {all.length === 0 && <span style={muted}>None available</span>}
+        {all.length > 0 && shown.length === 0 && <span style={muted}>No matches</span>}
+        {shown.map((v) => {
+          const on = sel.includes(v);
+          return (
+            <button key={v} onClick={() => onToggle(v)} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 999, cursor: "pointer", border: `1px solid ${on ? "var(--color-primary,#30D158)" : "var(--color-border,#ddd)"}`, background: on ? "var(--color-primary,#30D158)" : "transparent", color: on ? "#fff" : "inherit" }}>{v}</button>
+          );
+        })}
+      </div>
     </div>
   );
 }
